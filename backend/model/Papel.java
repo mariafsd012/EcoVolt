@@ -12,6 +12,7 @@ public class Papel{
     @GeneratedValue(strategy = GenerationType.IDENTITY) // gera automaticamente o id
     private Long id;
 
+    @Column(unique = true)
     @Enumerated(EnumType.STRING)
     private NomePapel nome;
 
