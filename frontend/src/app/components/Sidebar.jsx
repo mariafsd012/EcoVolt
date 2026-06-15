@@ -51,6 +51,7 @@ export default function Sidebar() {
     >
       {/* LOGO */}
       <div className="h-20 flex items-center px-5 border-b border-black/10 flex-shrink-0">
+        <a href="/">
         <div className="flex items-center gap-3">
           {/* ÍCONE */}
           <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
@@ -83,6 +84,7 @@ export default function Sidebar() {
             EcoVolt
           </span>
         </div>
+        </a>
       </div>
 
       {/* MENU */}

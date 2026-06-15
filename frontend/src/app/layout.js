@@ -1,7 +1,5 @@
 import "./globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Heebo } from "next/font/google";
-
+import { Geist, Geist_Mono, Heebo } from "next/font/google"; // Agrupado para ficar mais limpo
 import Sidebar from "./components/Sidebar";
 
 const geistSans = Geist({
@@ -30,13 +28,10 @@ export default function RootLayout({ children }) {
       lang="pt-BR"
       className={`${geistSans.variable} ${heebo.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-screen flex bg-gray-100">
+      <body className="min-h-screen flex bg-white">
 
-        {/* Sidebar fixa */}
-        <Sidebar />
 
-        {/* Conteúdo */}
-        <main className="flex-1 p-6">
+        <main className="flex-1">
           {children}
         </main>
 
