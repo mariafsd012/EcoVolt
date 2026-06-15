@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ChamadoJustificativaFaltaRepository extends JpaRepository<JustificativaFalta, Long> {
+public interface ChamadoJustificativaFaltaRepository extends JpaRepository<ChamadoJustificativaFalta, Long> {
     Optional<ChamadoJustificativaFalta> findByChamadoId(Long chamadoId);
-    List<ChamadoJustificativaFalta> findByStatusJustificativa(ChamadoJustificativaFalta.StatusJustificativa status);
+    List<ChamadoJustificativaFalta> findByStatus(ChamadoJustificativaFalta.StatusJustificativa status);
 }

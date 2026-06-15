@@ -2,11 +2,12 @@ package com.ecovolt.backend.security;
 
 import com.ecovolt.backend.model.Colaborador;
 import com.ecovolt.backend.repository.ColaboradorRepository;
-import org.springframework.security.core.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService{

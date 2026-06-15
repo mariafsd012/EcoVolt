@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface RegistroPontoRepository extends JpaRepository<RegistroPonto, Long> {
     List<RegistroPonto> findByColaboradorId(Long colaboradorId);
-    List<RegistroPonto> findByDataHoraBetween(LocalDateTime inicio, LocalDateTime fim);
-    List<RegistroPonto> findByColaboradorIdAndDataHoraBetween(Long colaboradorId, LocalDateTime inicio, LocalDateTime fim); // p procurar os registros de ponto dos colaboradores em um período específico
+    List<RegistroPonto> findByDataHoraRegistroBetween(LocalDateTime inicio, LocalDateTime fim);
+    List<RegistroPonto> findByColaboradorIdAndDataHoraRegistroBetween(Long colaboradorId, LocalDateTime inicio, LocalDateTime fim);
 }

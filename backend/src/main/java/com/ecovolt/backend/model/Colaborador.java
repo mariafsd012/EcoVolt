@@ -1,7 +1,7 @@
 package com.ecovolt.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Dara;
+import lombok.Data;
 import java.util.List;
 
 @Data
@@ -10,7 +10,7 @@ import java.util.List;
 public class Colaborador {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTIFY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
@@ -47,11 +47,12 @@ public class Colaborador {
         COORDENADOR_DE_MORADIA
     }
 
-    Public enum Setor{
+    public enum Setor{
         CAMPO,
         DHO,
         TI,
         LOGISTICA,
+        MORADIA,
         PONTO,
         EHS
     }

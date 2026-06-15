@@ -10,30 +10,31 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService{
+public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final ColaboradorRepository colaboradorRepository;
     private final JwtUtil jwtUtil;
 
-    public AuthService(Authenticationmanager authenticationManager, ColaboradorRepository colaboradorRepository, JwtUtil jwtUtil){
+    public AuthService(AuthenticationManager authenticationManager, ColaboradorRepository colaboradorRepository, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.colaboradorRepository = colaboradorRepository;
         this.jwtUtil = jwtUtil;
     }
 
-    public LoginResponse login(LoginRequest request){
-        authenticationManager.authenticate{
+    public LoginResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
-        };
+        );
 
-        Colaborador colaborador = colaboradorRepository.finByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
+        Colaborador colaborador = colaboradorRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
 
         String papel = colaborador.getPapeis().isEmpty()
-        ? "SEM_PAPEL"
-        : colaborador.getPapeis().get(0).getNome().name();
+                ? "SEM_PAPEL"
+                : colaborador.getPapeis().get(0).getNome().name();
 
-        String token = jwtUtil.generateToken(Colaborador.getEmail(), papel, colaborador.getId());
+        String token = jwtUtil.generateToken(colaborador.getEmail(), papel, colaborador.getId());
 
         return new LoginResponse(token, colaborador.getNome(), colaborador.getEmail(), papel);
     }
