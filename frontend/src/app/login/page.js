@@ -31,9 +31,11 @@ export default function LoginPage() {
                         placeholder="Digite a sua senha"
                         className={styles.input}
                     />
-
+                    
                     <button type="submit" className={styles.button}>
-                        Acessar
+                       <Link href="/dashboard" className={styles.link}>
+                            Acessar
+                        </Link>
                     </button>
                 </form>
 
