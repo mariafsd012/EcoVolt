@@ -1,10 +1,9 @@
 import Link from "next/link";
-import styles from "./login.module.css";
+import styles from "./esqueceu-senha.module.css";
 import { Comfortaa } from "next/font/google";
 const comfortaa = Comfortaa({ subsets: ["latin"] });
 
-
-export default function LoginPage() {
+export default function RecuperarSenhaPage() {
     return (
         <div className={styles.container}>
             <Link href="/home" className={styles.backButton}>
@@ -12,11 +11,11 @@ export default function LoginPage() {
             </Link>
             <div className={styles.card}>
                 <h1 className={styles.title}>
-                    <strong>Login</strong>
+                    <strong>Recuperar senha</strong>
                 </h1>
 
-                <p className={styles.subtitle}>
-                    Digite as suas informações
+                <p className={styles.description}> 
+                    Para recuperar a seua senha, digite o seu email corporativo.
                 </p>
 
                 <form className={styles.form}>
@@ -25,20 +24,14 @@ export default function LoginPage() {
                         placeholder="Digite o seu email"
                         className={styles.input}
                     />
-
-                    <input
-                        type="password"
-                        placeholder="Digite a sua senha"
-                        className={styles.input}
-                    />
-
-                    <button type="submit" className={styles.button}>
-                        Acessar
-                    </button>
                 </form>
 
-                <Link href="/esqueceu-senha" className={styles.forgotPasswordLink}>
-                    Esqueceu sua senha?
+                <button type="submit" className={styles.button}>
+                    Enviar
+                </button>
+
+                <Link href="/login" className={styles.forgotPasswordLink}>
+                    Voltar para o login
                 </Link>
             </div>
         </div>
