@@ -3,6 +3,9 @@ package com.ecovolt.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 @Data
 @Entity
@@ -18,6 +21,9 @@ public class ChamadoAjustePonto {
 
     @Enumerated(EnumType.STRING)
     private StatusAjustePonto status;
+
+    private LocalDate dataPonto;
+    private LocalTime horaCorreta;
 
     public enum StatusAjustePonto {
         PENDENTE,
