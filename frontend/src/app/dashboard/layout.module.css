@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7f4;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-x: hidden;
+}
