@@ -1,0 +1,103 @@
+"use client";
+
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Heebo } from "next/font/google";
+
+const heebo = Heebo({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+export default function FiltrosJustificativa({
+  filtros = { colaborador: "", periodo: "", detalhamento: "" },
+  tiposDetalhamento = [
+    { value: "abono", label: "Abono" },
+    { value: "ajuste", label: "Ajuste" },
+    { value: "falta", label: "Falta" },
+  ],
+  onChangeFiltro,
+}) {
+  return (
+    <section
+      className={`${heebo.className}
+      bg-white
+      border border-[#e8ede4]
+      p-8`}
+    >
+      {/* HEADER */}
+      <div className="flex items-center gap-3 mb-5">
+        <SlidersHorizontal size={16} className="text-[#374f30]" />
+        <h2 className="text-[24px] text-[#374f30] font-semibold">
+          Aplicar filtros
+        </h2>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {/* INPUT COLABORADOR (busca por nome) */}
+        <input
+          type="text"
+          placeholder="Buscar colaborador..."
+          value={filtros.colaborador}
+          onChange={(e) => onChangeFiltro("colaborador", e.target.value)}
+          className="
+            w-full h-10 px-4
+            bg-[#f7faf5]
+            border border-[#e8ede4]
+            rounded-lg
+            outline-none
+            text-[13px] text-[#374f30] font-medium
+            focus:outline-none
+          "
+        />
+
+        <div className="flex gap-3">
+          {/* INPUT PERÍODO (seletor de data nativo) */}
+          <div className="relative flex-1">
+            <input
+              type="date"
+              value={filtros.periodo}
+              onChange={(e) => onChangeFiltro("periodo", e.target.value)}
+              className="
+                w-full h-10 px-4
+                bg-[#f7faf5]
+                border border-[#e8ede4]
+                rounded-lg
+                outline-none
+                text-[13px] text-[#374f30] font-medium
+                focus:outline-none
+              "
+            />
+          </div>
+
+          {/* SELECT DETALHAMENTO */}
+          <div className="relative flex-1">
+            <select
+              value={filtros.detalhamento}
+              onChange={(e) => onChangeFiltro("detalhamento", e.target.value)}
+              className="
+                w-full h-10 px-4
+                bg-[#f7faf5]
+                border border-[#e8ede4]
+                rounded-lg
+                outline-none appearance-none
+                text-[13px] text-[#374f30] font-medium
+                focus:outline-none
+              "
+            >
+              <option value="">Detalhamento</option>
+              {tiposDetalhamento.map((tipo) => (
+                <option key={tipo.value} value={tipo.value}>
+                  {tipo.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              size={14}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a9a85] pointer-events-none"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

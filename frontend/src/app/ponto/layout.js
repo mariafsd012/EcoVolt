@@ -1,4 +1,9 @@
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../components/Sidebar";
+import { Heebo } from "next/font/google";
+
+const heebo = Heebo({
+  subsets: ["latin"],
+});
 
 export default function ControlePontoLayout({ children }) {
   return (
@@ -10,4 +15,5 @@ export default function ControlePontoLayout({ children }) {
 </div>
   );
 }
+
 

@@ -1,6 +1,12 @@
 "use client";
 
+import { Heebo } from "next/font/google";
 import { SquarePen } from "lucide-react";
+
+const heebo = Heebo({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export default function TabelaColaboradores({
   colaboradores,
@@ -9,7 +15,7 @@ export default function TabelaColaboradores({
   onEditar,
 }) {
   return (
-    <section className="bg-white rounded-2xl border border-[#e8ede4] shadow-[0_2px_10px_rgba(60,90,50,0.04)] overflow-hidden">
+    <section className={`${heebo.className} bg-white border border-[#e8ede4] overflow-hidden`}>
       <table className="w-full text-left">
         <thead>
           <tr className="bg-[#f3f6f0] text-[12px] text-[#7d8d78] uppercase tracking-wide">

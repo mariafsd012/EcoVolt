@@ -28,7 +28,7 @@ const subMenus = {
       label: "Controle de Ponto",
     },
     {
-      href: "/ponto/justificativas",
+      href: "/ponto/justificativa",
       icon: FileText,
       label: "Justificativas",
     },
@@ -99,13 +99,13 @@ export default function Sidebar() {
           <Image
             src="/logo.png"
             alt="EcoVolt"
-            width={42}
-            height={42}
+            width={70}
+            height={60}
           />
         </div>
 
         {/* MENU */}
-        <nav className="flex-1 flex flex-col gap-1 px-2 py-2">
+        <nav className="flex-1 flex flex-col gap-3 px-4 py-2">
           {menuItems.map(({ href, icon: Icon, label }) => {
             const active =
               pathname.startsWith(href) || activeSection === href;
@@ -167,7 +167,7 @@ export default function Sidebar() {
         </nav>
 
         {/* SAIR */}
-        <div className="border-t border-[#f4f7f2] p-2">
+        <div className="border-t border-[#f4f7f2] p-4">
           <button
             className="
               w-full h-[44px]

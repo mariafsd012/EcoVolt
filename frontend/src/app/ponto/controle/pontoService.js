@@ -1,22 +1,3 @@
-/**
- * pontoService.js
- * Camada de domínio da tela "Controle de Ponto".
- *
- * ENDPOINTS REAIS JÁ EXISTENTES NO BACKEND (PontoController / ColaboradorController):
- *
- * GET  /api/ponto/historico/{colaboradorId}   -> List<RegistroPonto>
- * PUT  /api/ponto/{registroId}/editar         -> body: EditarPontoRequest
- * POST /api/colaboradores/cadastrar           -> body: CadastroRequest
- *
- * ⚠️ AINDA FALTA NO BACKEND (necessário para a tela de listagem com filtros):
- * GET /api/colaboradores
- *   query params sugeridos: ?setor=PONTO
- *   response sugerida: List<Colaborador> (id, nome, cargo, setor)
- *
- * Sem esse endpoint, listarColaboradores() abaixo não vai funcionar ainda.
- * Avise quando o ColaboradorController tiver esse método que eu ajusto aqui.
- */
-
 import { apiClient } from "../../../../apiClient";
 
 export const pontoService = {

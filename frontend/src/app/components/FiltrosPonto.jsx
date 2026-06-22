@@ -1,6 +1,12 @@
 "use client";
 
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Heebo } from "next/font/google";
+
+const heebo = Heebo({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
 
 export default function FiltrosPonto({
   filtros = { colaboradorId: "", setor: "" },
@@ -8,48 +14,68 @@ export default function FiltrosPonto({
   onChangeFiltro,
 }) {
   return (
-    <section className="w-full bg-white rounded-2xl border border-[#FFFFFF] shadow-[0_2px_10px_rgba(60,90,50,0.04)] p-8 font-heebo">
-
+    <section
+      className={`${heebo.className}
+      bg-white
+      border border-[#e8ede4]
+      p-8`}
+    >
       {/* HEADER */}
-      <div className="flex items-center gap-3 mb-7">
-        <SlidersHorizontal size={18} className="shrink-0 text-[#374f30]" />
-        <h2 className="text-[24px] leading-none font-heebo font-medium text-[#374f30]">
+      <div className="flex items-center gap-3 mb-5">
+        <SlidersHorizontal size={16} className="text-[#374f30]" />
+        <h2 className="text-[24px] text-[#374f30] font-semibold">
           Aplicar filtros
         </h2>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
-
+      <div className="flex flex-col gap-3">
         {/* INPUT COLABORADOR */}
-        <div className="relative flex-1 min-w-0">
-          <input
-            type="text"
-            placeholder="Colaborador"
-            value={filtros.colaboradorId}
-            onChange={(e) => onChangeFiltro("colaboradorId", e.target.value)}
-            className="block w-full box-border h-12 leading-[48px] px-5 rounded-full border border-[#ececec] text-[14px] font-heebo text-[#374f30] placeholder:text-[#5a6a55] bg-[#f3f1f6] focus:outline-none focus:ring-2 focus:ring-[#3a6b35]/20"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Buscar colaborador..."
+          value={filtros.colaboradorId}
+          onChange={(e) => onChangeFiltro("colaboradorId", e.target.value)}
+          className="
+            w-full h-10 px-4
+            bg-[#f7faf5]
+            border border-[#e8ede4]
+            rounded-lg
+            outline-none
+            text-[13px] text-[#374f30] font-medium
+            focus:outline-none
+          "
+        />
 
-        {/* SELECT SETOR / EQUIPE */}
-        <div className="relative flex-1 min-w-0">
+        {/* SELECT SETOR */}
+        <div className="relative">
           <select
             value={filtros.setor}
             onChange={(e) => onChangeFiltro("setor", e.target.value)}
-            className="block w-full box-border h-12 leading-[48px] px-5 rounded-full border border-[#ececec] text-[14px] font-heebo text-[#374f30] bg-[#f3f1f6] appearance-none focus:outline-none focus:ring-2 focus:ring-[#3a6b35]/20"
+            className="
+              w-full h-10 px-4
+              bg-[#f7faf5]
+              border border-[#e8ede4]
+              rounded-lg
+              outline-none appearance-none
+              text-[13px] text-[#374f30] font-medium
+              focus:outline-none
+            "
           >
-            <option value="" disabled hidden className="font-heebo">
-              Equipe
+            <option value="" disabled hidden>
+              Selecionar equipe...
             </option>
 
             {setores.map((setor) => (
-              <option key={setor.value} value={setor.value} className="font-heebo">
+              <option key={setor.value} value={setor.value}>
                 {setor.label}
               </option>
             ))}
           </select>
+          <ChevronDown
+            size={14}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a9a85] pointer-events-none"
+          />
         </div>
-
       </div>
     </section>
   );
