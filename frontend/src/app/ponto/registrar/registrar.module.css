@@ -1,0 +1,104 @@
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(
+    160deg,
+    #d4f0c0 0%,
+    #a8d98a 40%,
+    #6ab87a 100%
+  );
+  overflow: hidden;
+}
+
+.turbinaWrapper {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 960px;
+  height: 70%;
+  opacity: 0.25;  /* ← era 0.12, agora mais visível */
+  pointer-events: none;
+}
+
+/* restante igual... */
+
+/* ── Card central ── */
+.card {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 3rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+}
+
+/* ── Relógio ── */
+.relogio {
+  margin-bottom: 2.5rem;
+}
+
+.data {
+  font-size: 14px;
+  color: #52796f;
+  text-transform: capitalize;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.hora {
+  font-size: 56px;
+  font-weight: 800;
+  color: #1b4332;
+  margin: 0.5rem 0 0 0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+
+/* ── Botão ── */
+.btnRegistrar {
+  width: 100%;
+  padding: 1.2rem;
+  background-color: #2d6a4f;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+
+.btnRegistrar:hover {
+  background-color: #1b4332;
+}
+
+.btnRegistrar:active {
+  transform: scale(0.98);
+}
+
+/* ── Link folha ── */
+.linkFolha {
+  display: block;
+  margin-top: 1.5rem;
+  color: #52796f;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.linkFolha:hover {
+  color: #1b4332;
+}

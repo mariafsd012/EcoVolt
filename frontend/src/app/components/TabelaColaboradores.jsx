@@ -8,6 +8,12 @@ const heebo = Heebo({
   weight: ["400", "500", "600", "700"],
 });
 
+const celulaStyle = {
+  padding: "16px 24px",
+  fontSize: "14px",
+  color: "#333333",
+};
+
 export default function TabelaColaboradores({
   colaboradores,
   isLoading,
@@ -15,20 +21,45 @@ export default function TabelaColaboradores({
   onEditar,
 }) {
   return (
-    <section className={`${heebo.className} bg-white border border-[#e8ede4] overflow-hidden`}>
-      <table className="w-full text-left">
+    <section
+      style={{ backgroundColor: "#ffffff", borderRadius: "16px", overflow: "hidden" }}
+      className={heebo.className}
+    >
+      <table style={{ width: "100%", textAlign: "left", borderCollapse: "collapse" }}>
         <thead>
-          <tr className="bg-[#f3f6f0] text-[12px] text-[#7d8d78] uppercase tracking-wide">
-            <th className="px-6 py-3 font-medium">Nome Completo</th>
-            <th className="px-6 py-3 font-medium">Equipe</th>
-            <th className="px-6 py-3 font-medium w-12" />
+          <tr style={{ backgroundColor: "#f3f6f0" }}>
+            <th
+              style={{
+                padding: "16px 24px",
+                fontSize: "12px",
+                color: "#7d8d78",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                fontWeight: 500,
+              }}
+            >
+              Nome Completo
+            </th>
+            <th
+              style={{
+                padding: "16px 24px",
+                fontSize: "12px",
+                color: "#7d8d78",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                fontWeight: 500,
+              }}
+            >
+              Equipe
+            </th>
+            <th style={{ width: "48px" }} />
           </tr>
         </thead>
 
         <tbody>
           {isLoading && (
             <tr>
-              <td colSpan={3} className="px-6 py-10 text-center text-[13px] text-[#8a9a85]">
+              <td colSpan={3} style={{ ...celulaStyle, textAlign: "center", padding: "40px 24px", color: "#8a9a85" }}>
                 Carregando colaboradores...
               </td>
             </tr>
@@ -36,7 +67,7 @@ export default function TabelaColaboradores({
 
           {!isLoading && erro && (
             <tr>
-              <td colSpan={3} className="px-6 py-10 text-center text-[13px] text-[#b05a55]">
+              <td colSpan={3} style={{ ...celulaStyle, textAlign: "center", padding: "40px 24px", color: "#b05a55" }}>
                 Não foi possível carregar os dados. Tente novamente em alguns instantes.
               </td>
             </tr>
@@ -44,7 +75,7 @@ export default function TabelaColaboradores({
 
           {!isLoading && !erro && colaboradores.length === 0 && (
             <tr>
-              <td colSpan={3} className="px-6 py-10 text-center text-[13px] text-[#8a9a85]">
+              <td colSpan={3} style={{ ...celulaStyle, textAlign: "center", padding: "40px 24px", color: "#8a9a85" }}>
                 Nenhum colaborador encontrado para os filtros selecionados.
               </td>
             </tr>
@@ -55,17 +86,19 @@ export default function TabelaColaboradores({
             colaboradores.map((colaborador, index) => (
               <tr
                 key={colaborador.id}
-                className={`text-[13px] text-[#333] ${
-                  index % 2 === 0 ? "bg-white" : "bg-[#f7faf5]"
-                } border-t border-[#eef2ea]`}
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#ffffff" : "#f7faf5",
+                  borderTop: "1px solid #eef2ea",
+                }}
               >
-                <td className="px-6 py-3">{colaborador.nome}</td>
-                <td className="px-6 py-3">{colaborador.setor ?? "-"}</td>
-                <td className="px-6 py-3 text-right">
+                <td style={celulaStyle}>{colaborador.nome}</td>
+                <td style={celulaStyle}>{colaborador.setor ?? "-"}</td>
+                <td style={{ ...celulaStyle, textAlign: "right" }}>
                   <button
                     onClick={() => onEditar(colaborador.id)}
                     aria-label={`Editar registro de ${colaborador.nome}`}
-                    className="text-[#3a6b35] hover:opacity-70 transition-opacity"
+                    style={{ color: "#3a6b35", border: "none", backgroundColor: "transparent" }}
+                    className="hover:opacity-70 transition-opacity"
                   >
                     <SquarePen size={17} />
                   </button>

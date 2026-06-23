@@ -2,156 +2,221 @@
 
 import { useState, useEffect } from "react";
 import styles from "./dashboard.module.css";
-
 import {
-  Clock,
-  ClockArrowUp,
-  ShieldCheck,
-  Laptop,
-  Leaf,
-  Users,
-  Home,
-  Plus,
+  Clock, Users, Home, Monitor, Truck, ShieldCheck,
+  Bell, Calendar, ChevronRight, Megaphone,
+  ClockArrowUp, BookOpen, UserCheck,
+  Building2, UserRound, Package, Wrench,
+  AlertTriangle, ClipboardCheck, HardHat,
 } from "lucide-react";
 
-/* ───────── HELPERS ───────── */
+function pad(n) { return String(n).padStart(2, "0"); }
 
-function pad(n) {
-  return String(n).padStart(2, "0");
-}
+const departamentos = [
+  {
+    nome: "Ponto",
+    icon: Clock,
+    cor: "#16a34a",
+    indicadores: [
+      { icon: ClockArrowUp, label: "Horas extras acumuladas",     valor: "+16h 20m", alerta: false },
+      { icon: Clock,        label: "Banco de horas",              valor: "+12h 30m", alerta: false },
+      { icon: UserCheck,    label: "Colaboradores com pendências", valor: "5",        alerta: true  },
+    ],
+  },
+  {
+    nome: "DHO",
+    icon: Users,
+    cor: "#7c3aed",
+    indicadores: [
+      { icon: Users,     label: "Colaboradores ativos",   valor: "312", alerta: false },
+      { icon: BookOpen,  label: "Treinamentos pendentes", valor: "8",   alerta: true  },
+      { icon: UserCheck, label: "Benefícios ativos",      valor: "290", alerta: false },
+    ],
+  },
+  {
+    nome: "Moradia",
+    icon: Home,
+    cor: "#0284c7",
+    indicadores: [
+      { icon: Building2, label: "Casas ocupadas",   valor: "45",  alerta: false },
+      { icon: UserRound, label: "Moradores ativos", valor: "128", alerta: false },
+      { icon: Package,   label: "Contas pendentes", valor: "3",   alerta: true  },
+    ],
+  },
+  {
+    nome: "TI",
+    icon: Monitor,
+    cor: "#16a34a",
+    indicadores: [
+      { icon: AlertTriangle,  label: "Chamados abertos",       valor: "12",  alerta: true  },
+      { icon: UserCheck,      label: "Usuários ativos",        valor: "248", alerta: false },
+      { icon: ClipboardCheck, label: "Solicitações pendentes", valor: "5",   alerta: true  },
+    ],
+  },
+  {
+    nome: "Frota e Logística",
+    icon: Truck,
+    cor: "#ea580c",
+    indicadores: [
+      { icon: Truck,   label: "Veículos em operação",     valor: "32", alerta: false },
+      { icon: Wrench,  label: "Manutenções pendentes",    valor: "4",  alerta: true  },
+      { icon: Package, label: "Itens em estoque crítico", valor: "7",  alerta: true  },
+    ],
+  },
+  {
+    nome: "EHS e Campo",
+    icon: ShieldCheck,
+    cor: "#0284c7",
+    indicadores: [
+      { icon: AlertTriangle,  label: "Ocorrências abertas",       valor: "3",  alerta: true  },
+      { icon: ClipboardCheck, label: "Inspeções realizadas",      valor: "18", alerta: false },
+      { icon: HardHat,        label: "EPIs em falta ou vencendo", valor: "6",  alerta: true  },
+    ],
+  },
+];
 
-/* ───────── COMPONENTE ───────── */
+const avisos = [
+  { titulo: "Reunião geral da empresa", detalhe: "23/05 às 10:00" },
+  { titulo: "Treinamento obrigatório",  detalhe: "Segurança no trabalho" },
+];
 
-export default function Dashboard() {
-  const [now, setNow] = useState(() => new Date());
-  const [entrada, setEntrada] = useState(null);
-  const [saida, setSaida] = useState(null);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setNow(new Date());
-    }, 1000);
-
-    return () => clearInterval(id);
-  }, []);
-
-  const timeStr = now
-    ? `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
-    : "--:--:--";
-
-  const dateStr = now
-    ? `${now.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })}`
-    : "";
-
-  const dateShort = now
-    ? `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`
-    : "";
-
-  const registrarEntrada = () => {
-    setEntrada(`${pad(now.getHours())}:${pad(now.getMinutes())}`);
-  };
-
-  const registrarSaida = () => {
-    setSaida(`${pad(now.getHours())}:${pad(now.getMinutes())}`);
-  };
-
+// ── Card de departamento ──
+function DepCard({ dep }) {
   return (
-    <div className={styles.dash}>
-
-      {/* SAUDAÇÃO */}
-      <div className={styles.greeting}>
-        <div>
-          <h1 className={styles.greetingTitle}>Olá, Maria 👋</h1>
-          <p className={styles.greetingSub}>Aqui está um resumo do seu dia.</p>
+    <div className={styles.depCard}>
+      <div className={styles.depHeader}>
+        <div
+          className={styles.depIconWrap}
+          style={{ background: dep.cor + "18", color: dep.cor }}
+        >
+          <dep.icon size={17} strokeWidth={2} />
         </div>
-        <span className={styles.dateBadge}>{dateShort}</span>
+        <span className={styles.depNome}>{dep.nome}</span>
       </div>
 
-      {/* MÉTRICAS */}
-      <div className={styles.grid4}>
-        {[
-          { label: "Horas no mês", value: "142h", sub: "Meta: 176h" },
-          { label: "Faltas", value: "1", sub: "Este mês" },
-          { label: "Treinamentos", value: "3/5", sub: "Concluídos" },
-          { label: "Desempenho", value: "87%", sub: "Acima da meta" },
-        ].map((m) => (
-          <div key={m.label} className={styles.metricCard}>
-            <div className={styles.metricLabel}>{m.label}</div>
-            <div className={styles.metricValue}>{m.value}</div>
-            <div className={styles.metricSub}>{m.sub}</div>
+      <div className={styles.depIndicadores}>
+        {dep.indicadores.map(({ icon: Icon, label, valor, alerta }) => (
+          <div key={label} className={styles.indicador}>
+            <div className={styles.indicadorIcon} style={{ color: dep.cor }}>
+              <Icon size={18} strokeWidth={1.8} />
+            </div>
+            <div>
+              <p className={`${styles.indicadorValor} ${alerta ? styles.indicadorAlerta : ""}`}>
+                {valor}
+              </p>
+              <p className={styles.indicadorLabel}>{label}</p>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* GRID PRINCIPAL */}
-      <div className={styles.grid2}>
+      <button className={styles.verDetalhes}>
+        Ver detalhes <ChevronRight size={14} />
+      </button>
+    </div>
+  );
+}
 
-        {/* PONTO */}
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Ponto de hoje</h2>
+// ── Componente principal ──
+export default function Dashboard() {
+  const [now, setNow] = useState(null);
 
-          <div className={styles.clockDisplay}>
-            <div className={styles.clockTime}>{timeStr}</div>
-            <div className={styles.clockDate}>{dateStr}</div>
+  useEffect(() => {
+    setNow(new Date());
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const hora = now
+    ? `${pad(now.getHours())}:${pad(now.getMinutes())}`
+    : "--:--";
+
+  const data = now
+    ? now.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
+    : "";
+
+  return (
+    <div className={styles.dash}>
+
+      {/* ── Header ── */}
+      <header className={styles.header}>
+        <div className={styles.headerUser}>
+          <h1 className={styles.headerNome}>Olá, Luiza Sousa</h1>
+          <p className={styles.headerSub}>Analista de DHO &nbsp;•&nbsp; DHO</p>
+        </div>
+
+        <div className={styles.headerRight}>
+          {now && (
+            <div className={styles.headerData}>
+              <Calendar size={20} strokeWidth={1.8} className={styles.headerDataIcon} />
+              <div>
+                <p className={styles.headerDataTexto}>{data}</p>
+                <p className={styles.headerHora}>{hora}</p>
+              </div>
+            </div>
+          )}
+
+          <button className={styles.notifBtn}>
+            <Bell size={20} strokeWidth={1.8} />
+            <span className={styles.notifBadge}>3</span>
+          </button>
+
+          {/* Avatar — troque a src pela foto real do usuário */}
+          <div className={styles.avatarFoto}>
+            {/* Se tiver URL de foto: */}
+            {/* <img src="/avatar-luiza.jpg" alt="Luiza Sousa" className={styles.avatarImg} /> */}
+            {/* Fallback com inicial: */}
+            <div className={styles.avatarInitial}>L</div>
+            <span className={styles.avatarOnline} />
           </div>
+        </div>
+      </header>
 
-          <button className={styles.pontoBtn} onClick={registrarEntrada}>
-            <ClockArrowUp size={16} />
-            Registrar entrada
-          </button>
+      {/* ── Conteúdo ── */}
+      <main className={styles.main}>
 
-          <button
-            className={`${styles.pontoBtn} ${styles.pontoBtnSaida}`}
-            onClick={registrarSaida}
-          >
-            <Clock size={16} />
-            Registrar saída
-          </button>
+        {/* Linha 1 — 3 deps + avisos */}
+        <div className={styles.gridTop}>
+          {departamentos.slice(0, 3).map((dep) => (
+            <DepCard key={dep.nome} dep={dep} />
+          ))}
 
-          <div className={styles.pontoRegistros}>
-            <div className={styles.cardLabel}>Registros de hoje</div>
-
-            <div className={styles.pontoRow}>
-              <span className={styles.pontoDay}>Entrada</span>
-              <span className={styles.pontoHours}>{entrada ?? "—"}</span>
+          <div className={styles.avisosCard}>
+            <div className={styles.depHeader}>
+              <div className={styles.depIconWrap} style={{ background: "#fef9c3", color: "#ca8a04" }}>
+                <Megaphone size={17} strokeWidth={2} />
+              </div>
+              <span className={styles.depNome}>Avisos importantes</span>
             </div>
 
-            <div className={styles.pontoRow}>
-              <span className={styles.pontoDay}>Saída</span>
-              <span className={styles.pontoHours}>{saida ?? "—"}</span>
+            <div className={styles.avisosList}>
+              {avisos.map((a) => (
+                <div key={a.titulo} className={styles.avisoItem}>
+                  <div>
+                    <p className={styles.avisoTitulo}>{a.titulo}</p>
+                    <p className={styles.avisoDetalhe}>{a.detalhe}</p>
+                  </div>
+                  <ChevronRight size={14} className={styles.avisoArrow} />
+                </div>
+              ))}
             </div>
+
+            <button className={styles.verTodos}>Ver todos os avisos</button>
           </div>
         </div>
 
-        {/* SEMANA */}
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Pontos da semana</h2>
-
-          {[
-            { day: "Segunda, 09/06", hours: "8h02", status: "ok", label: "Normal" },
-            { day: "Terça, 10/06", hours: "7h48", status: "late", label: "Atraso" },
-            { day: "Quarta, 11/06", hours: "8h15", status: "ok", label: "Normal" },
-            { day: "Quinta, 12/06", hours: "8h00", status: "ok", label: "Normal" },
-            { day: "Sexta, 13/06", hours: "—", status: "absent", label: "Falta" },
-            { day: "Hoje, 15/06", hours: "Em andamento", status: "ok", label: "—" },
-          ].map((p) => (
-            <div key={p.day} className={styles.pontoRow}>
-              <span className={styles.pontoDay}>{p.day}</span>
-              <span className={styles.pontoHours}>{p.hours}</span>
-              <span className={`${styles.pontoStatus} ${styles[`status_${p.status}`]}`}>
-                {p.label}
-              </span>
-            </div>
+        {/* Linha 2 — 3 deps */}
+        <div className={styles.gridBottom}>
+          {departamentos.slice(3).map((dep) => (
+            <DepCard key={dep.nome} dep={dep} />
           ))}
         </div>
 
-      </div>
+      </main>
 
+      <footer className={styles.footer}>
+        © 2025 EcoVolt. Todos os direitos reservados.
+      </footer>
     </div>
   );
 }

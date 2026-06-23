@@ -11,22 +11,35 @@ export default function PontoHeader() {
   }, []);
 
   return (
-    <header className="flex items-center justify-between">
+    <header
+      style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+    >
       <div>
-        <h1 className="text-[26px] font-bold text-[#222] leading-tight">
+        <h1 style={{ fontSize: "26px", fontWeight: 700, color: "#222", lineHeight: 1.2 }}>
           Ponto
         </h1>
-        <p className="text-[13px] text-[#8a9a85] mt-1">
+        <p style={{ fontSize: "13px", color: "#8a9a85", marginTop: "4px" }}>
           Gerencie as jornadas de trabalho
         </p>
       </div>
 
-      <div className="flex items-center gap-3">
-        <span className="text-[14px] text-[#4a5a45]">
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <span style={{ fontSize: "14px", color: "#4a5a45" }}>
           {usuario?.nome ? `Bem vindo, ${usuario.nome}!` : "Bem vindo!"}
         </span>
 
-        <div className="w-9 h-9 rounded-full bg-[#dfe6da] overflow-hidden flex items-center justify-center" />
+        <div
+          style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "50%",
+            backgroundColor: "#dfe6da",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        />
       </div>
     </header>
   );

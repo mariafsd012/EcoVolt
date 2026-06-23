@@ -8,21 +8,37 @@ const heebo = Heebo({
   weight: ["400", "500", "600", "700"],
 });
 
+const celulaStyle = {
+  padding: "16px 24px",
+  fontSize: "14px",
+  color: "#333333",
+  verticalAlign: "top",
+};
+
 function StatusDots({ status, onAprovar, onReprovar }) {
+  const dotStyle = {
+    width: "16px",
+    height: "16px",
+    borderRadius: "50%",
+    border: "none",
+  };
+
   if (status === "pendente") {
     return (
-      <div className="flex items-center gap-2">
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <button
           type="button"
           aria-label="Reprovar justificativa"
           onClick={onReprovar}
-          className="w-4 h-4 rounded-full bg-[#c0504d] hover:opacity-80 transition"
+          style={{ ...dotStyle, backgroundColor: "#c0504d" }}
+          className="hover:opacity-80 transition-opacity"
         />
         <button
           type="button"
           aria-label="Aprovar justificativa"
           onClick={onAprovar}
-          className="w-4 h-4 rounded-full bg-[#3a6b35] hover:opacity-80 transition"
+          style={{ ...dotStyle, backgroundColor: "#3a6b35" }}
+          className="hover:opacity-80 transition-opacity"
         />
       </div>
     );
@@ -31,7 +47,7 @@ function StatusDots({ status, onAprovar, onReprovar }) {
   if (status === "reprovado") {
     return (
       <div
-        className="w-4 h-4 rounded-full bg-[#c0504d]"
+        style={{ ...dotStyle, backgroundColor: "#c0504d" }}
         title="Reprovado"
         aria-label="Reprovado"
       />
@@ -40,7 +56,7 @@ function StatusDots({ status, onAprovar, onReprovar }) {
 
   return (
     <div
-      className="w-4 h-4 rounded-full bg-[#3a6b35]"
+      style={{ ...dotStyle, backgroundColor: "#3a6b35" }}
       title="Aprovado"
       aria-label="Aprovado"
     />
@@ -57,21 +73,44 @@ export default function TabelaJustificativas({
 }) {
   return (
     <section
-      className={`${heebo.className} bg-white border border-[#e8ede4] overflow-hidden`}
+      style={{ backgroundColor: "#ffffff", borderRadius: "16px", overflow: "hidden" }}
+      className={heebo.className}
     >
-      <table className="w-full text-left">
+      <table style={{ width: "100%", textAlign: "left", borderCollapse: "collapse" }}>
         <thead>
-          <tr className="bg-[#f3f6f0] text-[12px] text-[#7d8d78] uppercase tracking-wide">
-            <th className="px-6 py-3 font-medium">Nome Completo</th>
-            <th className="px-6 py-3 font-medium">Detalhamento</th>
-            <th className="px-6 py-3 font-medium w-28" />
+          <tr style={{ backgroundColor: "#f3f6f0" }}>
+            <th
+              style={{
+                padding: "16px 24px",
+                fontSize: "12px",
+                color: "#7d8d78",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                fontWeight: 500,
+              }}
+            >
+              Nome Completo
+            </th>
+            <th
+              style={{
+                padding: "16px 24px",
+                fontSize: "12px",
+                color: "#7d8d78",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                fontWeight: 500,
+              }}
+            >
+              Detalhamento
+            </th>
+            <th style={{ width: "112px" }} />
           </tr>
         </thead>
 
         <tbody>
           {isLoading && (
             <tr>
-              <td colSpan={3} className="px-6 py-10 text-center text-[13px] text-[#8a9a85]">
+              <td colSpan={3} style={{ ...celulaStyle, textAlign: "center", padding: "40px 24px", color: "#8a9a85" }}>
                 Carregando justificativas...
               </td>
             </tr>
@@ -79,7 +118,7 @@ export default function TabelaJustificativas({
 
           {!isLoading && erro && (
             <tr>
-              <td colSpan={3} className="px-6 py-10 text-center text-[13px] text-[#b05a55]">
+              <td colSpan={3} style={{ ...celulaStyle, textAlign: "center", padding: "40px 24px", color: "#b05a55" }}>
                 Não foi possível carregar os dados. Tente novamente em alguns instantes.
               </td>
             </tr>
@@ -87,7 +126,7 @@ export default function TabelaJustificativas({
 
           {!isLoading && !erro && justificativas.length === 0 && (
             <tr>
-              <td colSpan={3} className="px-6 py-10 text-center text-[13px] text-[#8a9a85]">
+              <td colSpan={3} style={{ ...celulaStyle, textAlign: "center", padding: "40px 24px", color: "#8a9a85" }}>
                 Nenhuma justificativa encontrada para os filtros selecionados.
               </td>
             </tr>
@@ -98,14 +137,14 @@ export default function TabelaJustificativas({
             justificativas.map((justificativa) => (
               <tr
                 key={justificativa.id}
-                className="text-[13px] text-[#333] bg-[#f7faf5] border-t border-[#eef2ea]"
+                style={{ backgroundColor: "#f7faf5", borderTop: "1px solid #eef2ea" }}
               >
-                <td className="px-6 py-4 align-top">{justificativa.nome}</td>
-                <td className="px-6 py-4 align-top text-[#5a6a55]">
+                <td style={celulaStyle}>{justificativa.nome}</td>
+                <td style={{ ...celulaStyle, color: "#5a6a55" }}>
                   {justificativa.detalhamento}
                 </td>
-                <td className="px-6 py-4 align-top">
-                  <div className="flex items-center gap-4 justify-end">
+                <td style={celulaStyle}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px", justifyContent: "flex-end" }}>
                     <StatusDots
                       status={justificativa.status}
                       onAprovar={() => onAprovar?.(justificativa.id)}
@@ -115,7 +154,8 @@ export default function TabelaJustificativas({
                       type="button"
                       onClick={() => onVerDetalhes?.(justificativa.id)}
                       aria-label={`Ver detalhes da justificativa de ${justificativa.nome}`}
-                      className="text-[#3a6b35] hover:opacity-70 transition-opacity"
+                      style={{ color: "#3a6b35", border: "none", backgroundColor: "transparent" }}
+                      className="hover:opacity-70 transition-opacity"
                     >
                       <FileText size={17} />
                     </button>

@@ -24,7 +24,10 @@ export default function ControlePontoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8faf7] p-8 flex flex-col gap-6">
+    <div
+      className="min-h-screen bg-[#f8faf7] py-8 flex flex-col gap-6"
+      style={{ paddingLeft: "0.25cm", paddingRight: "0.25cm" }}
+    >
       <PontoHeader />
 
       <FiltrosPonto
@@ -39,6 +42,8 @@ export default function ControlePontoPage() {
         erro={erro}
         onEditar={handleEditar}
       />
+
+      
     </div>
   );
 }
