@@ -39,7 +39,8 @@ public class PontoService {
     }
 
     public List<RegistroPonto> buscarHistorico(Long colaboradorId) {
-        return registroPontoRepository.findByColaboradorId(colaboradorId);
+        // Busca agora retorna a lista já ordenada pelo banco de dados
+        return registroPontoRepository.findByColaboradorIdOrderByDataHoraRegistroDesc(colaboradorId);
     }
 
     public RegistroPonto editar(Long registroId, EditarPontoRequest request) {
@@ -67,6 +68,7 @@ public class PontoService {
     }
 
     private RegistroPonto.TipoPonto determinarTipo(Long colaboradorId) {
+        // Mantive a lógica original de determinar o próximo tipo
         List<RegistroPonto> registros = registroPontoRepository.findByColaboradorId(colaboradorId);
 
         if (registros.isEmpty()) {

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { pontoService } from "../ponto/controle/pontoService";
 
-// Enum Setor do backend (Colaborador.java) - fixo, não vem da API
 export const SETORES = [
   { value: "CAMPO", label: "Campo" },
   { value: "DHO", label: "DHO" },
@@ -14,28 +13,20 @@ export const SETORES = [
   { value: "EHS", label: "EHS" },
 ];
 
-/**
- * Gerencia o estado da tela de Controle de Ponto:
- * - filtro por setor (= "equipe" no design) e por colaborador
- * - listagem de colaboradores
- * - estados de loading / erro
- *
- * Depende de GET /api/colaboradores existir no backend (ver nota em pontoService.js).
- */
 export function useControlePonto() {
   const [colaboradores, setColaboradores] = useState([]);
-
   const [filtros, setFiltros] = useState({
     colaboradorId: "",
     setor: "",
   });
-
   const [isLoadingLista, setIsLoadingLista] = useState(true);
   const [erro, setErro] = useState(null);
 
   const abortRef = useRef(null);
 
+  // O useCallback garante que a função só mude se os filtros mudarem
   const buscarColaboradores = useCallback(async (filtrosAtuais) => {
+    // Cancela requisição anterior se o usuário digitar rápido
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -47,11 +38,12 @@ export function useControlePonto() {
       const resposta = await pontoService.listarColaboradores(filtrosAtuais, {
         signal: controller.signal,
       });
-      // resposta esperada: array de Colaborador (id, nome, cargo, setor)
+      
       setColaboradores(Array.isArray(resposta) ? resposta : []);
     } catch (err) {
       if (err.name !== "AbortError") {
-        setErro(err);
+        console.error("Erro ao buscar colaboradores:", err);
+        setErro("Não foi possível carregar os colaboradores.");
         setColaboradores([]);
       }
     } finally {
@@ -59,13 +51,21 @@ export function useControlePonto() {
     }
   }, []);
 
+  // Efeito principal: dispara busca sempre que filtros mudam
   useEffect(() => {
     buscarColaboradores(filtros);
+    
+    // Cleanup no desmonte do componente
+    return () => abortRef.current?.abort();
   }, [filtros, buscarColaboradores]);
 
-  function atualizarFiltro(campo, valor) {
-    setFiltros((prev) => ({ ...prev, [campo]: valor }));
-  }
+  // Atualiza o filtro e reinicia a busca
+  const atualizarFiltro = (campo, valor) => {
+    setFiltros((prev) => ({ 
+      ...prev, 
+      [campo]: valor 
+    }));
+  };
 
   return {
     colaboradores,

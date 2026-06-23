@@ -13,40 +13,57 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ColaboradorService{
+public class ColaboradorService {
 
     private final ColaboradorRepository colaboradorRepository;
     private final EscalaRepository escalaRepository;
     private final PapelRepository papelRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ColaboradorService(ColaboradorRepository colaboradorRepository, EscalaRepository escalaRepository, PapelRepository papelRepository, PasswordEncoder passwordEncoder){
+    public ColaboradorService(ColaboradorRepository colaboradorRepository, 
+                              EscalaRepository escalaRepository, 
+                              PapelRepository papelRepository, 
+                              PasswordEncoder passwordEncoder) {
         this.colaboradorRepository = colaboradorRepository;
         this.escalaRepository = escalaRepository;
         this.papelRepository = papelRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Colaborador cadastrar(CadastroRequest request){
-        Escala escala = escalaRepository.findById(request.getEscalaId()).orElseThrow(() -> new RuntimeException("Escala não encontrada"));
+    /**
+     * Método atualizado para filtrar por nome e setor.
+     * O Controller chama este método.
+     */
+    public List<Colaborador> listarFiltrado(String nome, String setor) {
+        if (nome != null && !nome.isEmpty() && setor != null && !setor.isEmpty()) {
+            return colaboradorRepository.findByNomeContainingIgnoreCaseAndSetor(nome, setor);
+        } else if (nome != null && !nome.isEmpty()) {
+            return colaboradorRepository.findByNomeContainingIgnoreCase(nome);
+        } else if (setor != null && !setor.isEmpty()) {
+            return colaboradorRepository.findBySetor(setor);
+        }
+        return colaboradorRepository.findAll();
+    }
+
+    public Colaborador cadastrar(CadastroRequest request) {
+        Escala escala = escalaRepository.findById(request.getEscalaId())
+                .orElseThrow(() -> new RuntimeException("Escala não encontrada"));
 
         List<Papel> papeis = request.getPapeis().stream()
-        .map(nomePapel -> {
-            return papelRepository.findByNome(nomePapel)
-                    .orElseThrow(() -> new RuntimeException("Papel não encontrado: " + nomePapel));
-        })
-        .collect(Collectors.toList());
+                .map(nomePapel -> papelRepository.findByNome(nomePapel)
+                        .orElseThrow(() -> new RuntimeException("Papel não encontrado: " + nomePapel)))
+                .collect(Collectors.toList());
 
-    Colaborador colaborador = new Colaborador();
-    colaborador.setNome(request.getNome());
-    colaborador.setCpf(request.getCpf());
-    colaborador.setEmail(request.getEmail());
-    colaborador.setSenha(passwordEncoder.encode(request.getSenha()));
-    colaborador.setCargo(request.getCargo());
-    colaborador.setSetor(request.getSetor());
-    colaborador.setEscala(escala);
-    colaborador.setPapeis(papeis);
+        Colaborador colaborador = new Colaborador();
+        colaborador.setNome(request.getNome());
+        colaborador.setCpf(request.getCpf());
+        colaborador.setEmail(request.getEmail());
+        colaborador.setSenha(passwordEncoder.encode(request.getSenha()));
+        colaborador.setCargo(request.getCargo());
+        colaborador.setSetor(request.getSetor());
+        colaborador.setEscala(escala);
+        colaborador.setPapeis(papeis);
 
-    return colaboradorRepository.save(colaborador);
+        return colaboradorRepository.save(colaborador);
     }
 }

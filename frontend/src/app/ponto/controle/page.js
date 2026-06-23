@@ -19,10 +19,9 @@ export default function ControlePontoPage() {
   } = useControlePonto();
 
   function handleEditar(colaboradorId) {
-    // Ajustar a rota de destino conforme a navegação definida para edição de jornada
-    router.push(`/ponto/controle/${colaboradorId}`);
-  }
-
+  // Isso fará o navegador ir para /ponto/controle/1, por exemplo
+  router.push(`/ponto/controle/${colaboradorId}`);
+}
   return (
     <div
       className="min-h-screen bg-[#f8faf7] py-8 flex flex-col gap-6"
