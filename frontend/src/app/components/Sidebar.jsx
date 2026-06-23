@@ -44,7 +44,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     const papel = window.localStorage.getItem("papel") || "";
-    setIsAnalistaPonto(papel === "ANALISTA_PONTO");
+    setIsAnalistaPonto(papel === "ROLE_ANALISTA_PONTO");
   }, []);
 
   const handleItemClick = (href) => {
