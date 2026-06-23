@@ -3,14 +3,17 @@ package com.ecovolt.backend.controller;
 import com.ecovolt.backend.model.RegistroPonto;
 import com.ecovolt.backend.security.JwtUtil;
 import com.ecovolt.backend.service.PontoService;
-// ALTERE A LINHA ABAIXO SE O NOME FOR DIFERENTE NO SEU SISTEMA
-import com.ecovolt.backend.repository.ColaboradorRepository; 
-
+import com.ecovolt.backend.repository.ColaboradorRepository;
+import com.ecovolt.backend.dto.HistoricoPontoDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.ecovolt.backend.dto.EditarPontoRequest;
 import com.ecovolt.backend.model.ChamadoJustificativaFalta;
 
@@ -38,19 +41,43 @@ public class PontoController {
 
     @GetMapping("/historico/{colaboradorId}")
     public ResponseEntity<Map<String, Object>> buscarHistorico(@PathVariable Long colaboradorId) {
-        List<RegistroPonto> historico = pontoService.buscarHistorico(colaboradorId);
-        
-        // Ajustado para usar o colaboradorRepository
+        // Checagem de autenticação/autorizações: permite acesso ao próprio colaborador ou a roles administrativas
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String requesterEmail = authentication.getName();
+        var requesterOpt = colaboradorRepository.findByEmail(requesterEmail);
+        if (requesterOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        var requester = requesterOpt.get();
+        boolean isOwner = requester.getId().equals(colaboradorId);
+        boolean isAdminOrAnalyst = authentication.getAuthorities().stream()
+            .map(a -> a.getAuthority())
+            .anyMatch(auth -> auth.contains("ADMIN") || auth.equals("ROLE_ANALISTA_PONTO"));
+
+        if (!isOwner && !isAdminOrAnalyst) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Agora chamamos o método que retorna o DTO agrupado
+        List<HistoricoPontoDTO> historicoAgrupado = pontoService.buscarHistoricoAgrupado(colaboradorId);
+
         var colaborador = colaboradorRepository.findById(colaboradorId)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
-        
+
         Map<String, Object> resposta = new HashMap<>();
         resposta.put("colaborador", Map.of(
             "nome", colaborador.getNome(), 
             "setor", colaborador.getSetor() != null ? colaborador.getSetor() : "Não definido"
         ));
-        resposta.put("registros", historico);
-        
+
+        // Retornamos a lista formatada (HistoricoPontoDTO) para o frontend
+        resposta.put("registros", historicoAgrupado);
+
         return ResponseEntity.ok(resposta);
     }
 

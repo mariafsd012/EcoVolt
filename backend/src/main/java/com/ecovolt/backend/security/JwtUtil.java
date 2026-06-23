@@ -2,18 +2,26 @@ package com.ecovolt.backend.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil{
 
-    private static final String SECRET = "ecovolt-secret-key-2026-123456789";
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+
+    @Value("${jwt.secret:ecovolt-secret-key-2026-123456789}")
+    private String secret;
+
     private static final long EXPIRATION_TIME = 86400000; // 24 horas em milissegundos
 
     private Key getSigninKey(){
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(String email, String papel, Long id){
@@ -43,7 +51,11 @@ public class JwtUtil{
         try{
             getClaims(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            logger.info("JWT expired: {}", e.getMessage());
+            return false;
         } catch (JwtException e){
+            logger.info("JWT invalid: {}", e.getMessage());
             return false;
         }
     }

@@ -11,5 +11,19 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  backend:
+    build: .
+    container_name: ecovolt-backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecovolt
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+      SERVER_PORT: 8000
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
 volumes:
   pgdata:

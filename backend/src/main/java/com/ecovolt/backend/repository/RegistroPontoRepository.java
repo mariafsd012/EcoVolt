@@ -9,10 +9,17 @@ import java.util.List;
 @Repository
 public interface RegistroPontoRepository extends JpaRepository<RegistroPonto, Long> {
     
-    // Método para buscar histórico ordenado do mais recente para o mais antigo
+    // Busca o histórico para a tabela (do mais recente para o mais antigo)
     List<RegistroPonto> findByColaboradorIdOrderByDataHoraRegistroDesc(Long colaboradorId);
     
-    // Mantendo os métodos existentes para compatibilidade
+    // Busca o histórico ordenado por data/hora crescente (necessário para o agrupamento do DTO)
+    List<RegistroPonto> findByColaboradorIdOrderByDataHoraRegistroAsc(Long colaboradorId);
+    
+    // Método para a lógica de controle de 4 registros diários
+    List<RegistroPonto> findByColaboradorIdAndDataHoraRegistroBetweenOrderByDataHoraRegistroAsc(
+            Long colaboradorId, LocalDateTime inicio, LocalDateTime fim);
+    
+    // Métodos auxiliares
     List<RegistroPonto> findByColaboradorId(Long colaboradorId);
     List<RegistroPonto> findByDataHoraRegistroBetween(LocalDateTime inicio, LocalDateTime fim);
     List<RegistroPonto> findByColaboradorIdAndDataHoraRegistroBetween(Long colaboradorId, LocalDateTime inicio, LocalDateTime fim);

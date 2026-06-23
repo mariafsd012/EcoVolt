@@ -1,6 +1,7 @@
 package com.ecovolt.backend.service;
 
 import com.ecovolt.backend.dto.EditarPontoRequest;
+import com.ecovolt.backend.dto.HistoricoPontoDTO;
 import com.ecovolt.backend.model.ChamadoJustificativaFalta;
 import com.ecovolt.backend.model.Colaborador;
 import com.ecovolt.backend.model.RegistroPonto;
@@ -8,8 +9,12 @@ import com.ecovolt.backend.repository.ChamadoJustificativaFaltaRepository;
 import com.ecovolt.backend.repository.ColaboradorRepository;
 import com.ecovolt.backend.repository.RegistroPontoRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PontoService {
@@ -30,54 +35,62 @@ public class PontoService {
         Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
 
+        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
+        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
+
+        List<RegistroPonto> registrosHoje = registroPontoRepository
+                .findByColaboradorIdAndDataHoraRegistroBetweenOrderByDataHoraRegistroAsc(colaboradorId, inicioDia, fimDia);
+
+        if (registrosHoje.size() >= 4) {
+            throw new RuntimeException("Limite diário de 4 registros atingido.");
+        }
+
         RegistroPonto registro = new RegistroPonto();
         registro.setColaborador(colaborador);
         registro.setDataHoraRegistro(LocalDateTime.now());
-        registro.setTipo(determinarTipo(colaboradorId));
+        registro.setTipo(registrosHoje.size() % 2 == 0 ? RegistroPonto.TipoPonto.ENTRADA : RegistroPonto.TipoPonto.SAIDA);
 
         return registroPontoRepository.save(registro);
     }
 
-    public List<RegistroPonto> buscarHistorico(Long colaboradorId) {
-        // Busca agora retorna a lista já ordenada pelo banco de dados
-        return registroPontoRepository.findByColaboradorIdOrderByDataHoraRegistroDesc(colaboradorId);
+    public List<HistoricoPontoDTO> buscarHistoricoAgrupado(Long colaboradorId) {
+        List<RegistroPonto> registros = registroPontoRepository.findByColaboradorIdOrderByDataHoraRegistroAsc(colaboradorId);
+        
+        // Agrupa registros por data
+        Map<LocalDate, List<RegistroPonto>> agrupados = registros.stream()
+                .collect(Collectors.groupingBy(r -> r.getDataHoraRegistro().toLocalDate()));
+
+        return agrupados.entrySet().stream().map(entry -> {
+            List<RegistroPonto> doDia = entry.getValue();
+            HistoricoPontoDTO dto = new HistoricoPontoDTO();
+            dto.setData(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            
+            // Preenche horários conforme ordem cronológica
+            if (doDia.size() > 0) dto.setEntrada1(formatarHora(doDia.get(0)));
+            if (doDia.size() > 1) dto.setSaida1(formatarHora(doDia.get(1)));
+            if (doDia.size() > 2) dto.setEntrada2(formatarHora(doDia.get(2)));
+            if (doDia.size() > 3) dto.setSaida2(formatarHora(doDia.get(3)));
+            
+            return dto;
+        }).sorted(Comparator.comparing(HistoricoPontoDTO::getData).reversed()).collect(Collectors.toList());
+    }
+
+    private String formatarHora(RegistroPonto r) {
+        return r.getDataHoraRegistro().format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     public RegistroPonto editar(Long registroId, EditarPontoRequest request) {
         RegistroPonto registro = registroPontoRepository.findById(registroId)
                 .orElseThrow(() -> new RuntimeException("Registro de ponto não encontrado"));
-
-        if (request.getDataHoraRegistro() != null) {
-            registro.setDataHoraRegistro(request.getDataHoraRegistro());
-        }
-
-        if (request.getTipo() != null) {
-            registro.setTipo(request.getTipo());
-        }
-
+        if (request.getDataHoraRegistro() != null) registro.setDataHoraRegistro(request.getDataHoraRegistro());
+        if (request.getTipo() != null) registro.setTipo(request.getTipo());
         return registroPontoRepository.save(registro);
     }
 
     public ChamadoJustificativaFalta abonarFalta(Long chamadoId) {
         ChamadoJustificativaFalta justificativa = chamadoJustificativaFaltaRepository.findByChamadoId(chamadoId)
                 .orElseThrow(() -> new RuntimeException("Justificativa não encontrada"));
-
         justificativa.setStatus(ChamadoJustificativaFalta.StatusJustificativa.APROVADA);
-
         return chamadoJustificativaFaltaRepository.save(justificativa);
-    }
-
-    private RegistroPonto.TipoPonto determinarTipo(Long colaboradorId) {
-        // Mantive a lógica original de determinar o próximo tipo
-        List<RegistroPonto> registros = registroPontoRepository.findByColaboradorId(colaboradorId);
-
-        if (registros.isEmpty()) {
-            return RegistroPonto.TipoPonto.ENTRADA;
-        }
-
-        RegistroPonto ultimo = registros.get(registros.size() - 1);
-        return ultimo.getTipo() == RegistroPonto.TipoPonto.ENTRADA
-                ? RegistroPonto.TipoPonto.SAIDA
-                : RegistroPonto.TipoPonto.ENTRADA;
     }
 }

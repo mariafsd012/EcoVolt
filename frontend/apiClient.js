@@ -11,13 +11,12 @@ class ApiError extends Error {
 
 function getToken() {
   if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("ecovolt_token");
+  // CORREÇÃO: Usando a chave correta 'token' conforme visto no seu navegador
+  return window.localStorage.getItem("token");
 }
 
 async function request(path, { method = "GET", body, headers, signal } = {}) {
   const token = getToken();
-
-  // Garante que o path comece com / se não começar
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
 
   const response = await fetch(`${BASE_URL}${cleanPath}`, {

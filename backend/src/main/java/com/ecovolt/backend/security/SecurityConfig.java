@@ -56,17 +56,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Rotas públicas
-                .requestMatchers("/api/auth/**", "/api/colaboradores/cadastrar").permitAll()
-                .requestMatchers("/api/colaboradores").permitAll()
+                .requestMatchers("/api/auth/**", "/api/colaboradores/cadastrar", "/api/colaboradores").permitAll()
                 
-                // Rota protegida: Histórico de Ponto
-                // Adicionamos as variações com e sem ROLE_ para garantir compatibilidade
-                .requestMatchers("/api/ponto/historico/**").hasAnyAuthority(
-                    "ADMIN", "ANALISTA_PONTO", "ROLE_ADMIN", "ROLE_ANALISTA_PONTO"
-                )
+                // Rotas de Ponto: controller fará a checagem de propriedade/roles
+                .requestMatchers("/api/ponto/historico/**").authenticated()
                 
-                // Qualquer outra rota exige autenticação
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

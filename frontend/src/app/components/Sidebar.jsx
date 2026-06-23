@@ -35,11 +35,17 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [activeSection, setActiveSection] = useState(null);
+  const [isAnalistaPonto, setIsAnalistaPonto] = useState(false);
 
   useEffect(() => {
     const parentPath = Object.keys(subMenus).find((key) => pathname.startsWith(key));
     setActiveSection(parentPath || null);
   }, [pathname]);
+
+  useEffect(() => {
+    const papel = window.localStorage.getItem("papel") || "";
+    setIsAnalistaPonto(papel === "ANALISTA_PONTO");
+  }, []);
 
   const handleItemClick = (href) => {
     if (subMenus[href]) {
@@ -51,6 +57,13 @@ export default function Sidebar() {
 
   const subItems = activeSection ? subMenus[activeSection] : [];
   const activeSectionLabel = menuItems.find((m) => m.href === activeSection)?.label;
+
+  const filteredSubItems = subItems.filter((item) => {
+    if (item.href === "/ponto/controle" || item.href === "/ponto/justificativa" || item.href === "/ponto/ferias-folgas" || item.href === "/ponto/relatorio") {
+      return isAnalistaPonto;
+    }
+    return true;
+  });
 
   return (
     <div className="flex h-screen bg-[#f8faf7]">
@@ -108,7 +121,7 @@ export default function Sidebar() {
 
       <aside className={`
         h-screen bg-white border-r border-[#e8ede4] flex flex-col transition-all duration-300 overflow-hidden
-        ${subItems.length ? "w-[210px]" : "w-0"}
+        ${filteredSubItems.length ? "w-[210px]" : "w-0"}
       `}>
         <div className="h-[82px] flex items-center justify-center border-b border-[#f4f7f2]">
           <span className="text-[11px] font-bold uppercase tracking-[0.20em] text-[#83a678]">
@@ -117,7 +130,7 @@ export default function Sidebar() {
         </div>
 
         <nav className="flex-1 flex flex-col items-center pt-8 gap-3">
-          {subItems.map(({ href, icon: Icon, label }) => {
+          {filteredSubItems.map(({ href, icon: Icon, label }) => {
             const active = pathname === href;
             const isActionItem = href === "/ponto/registrar";
 

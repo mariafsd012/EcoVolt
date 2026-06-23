@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import styles from "./registrar.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { pontoService } from "../controle/pontoService";
 
 export default function RegistrarPonto() {
   const [dataHora, setDataHora] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     setDataHora(new Date());
@@ -52,11 +55,42 @@ export default function RegistrarPonto() {
         </div>
         <button
           className={styles.btnRegistrar}
-          onClick={() => alert("Ponto registrado!")}
+          onClick={async () => {
+            setIsSubmitting(true);
+            setMsg("");
+            try {
+              const registro = await pontoService.registrarPonto();
+              const hora = new Date(registro.dataHoraRegistro).toLocaleTimeString();
+              setMsg(`Ponto registrado com sucesso!`);
+              // mostra confirmação forte em verde (sem redirecionamento automático)
+              // o usuário pode navegar manualmente para a folha de ponto
+            } catch (err) {
+              console.error(err);
+              setMsg(err?.message || "Erro ao registrar ponto.");
+            } finally {
+              setIsSubmitting(false);
+            }
+          }}
+          disabled={isSubmitting}
         >
-          Registrar Ponto
+          {isSubmitting ? "Registrando..." : "Registrar Ponto"}
         </button>
-        <Link href="/Ponto/controle" className={styles.linkFolha}>
+        {msg && (
+          <div
+            style={{
+              marginTop: 12,
+              fontWeight: 700,
+              color: "#0f5132",
+              background: "#e6fff0",
+              padding: "8px 12px",
+              borderRadius: 8,
+              display: "inline-block",
+            }}
+          >
+            {msg}
+          </div>
+        )}
+        <Link href="/ponto/controle" className={styles.linkFolha}>
           Visualizar folha de ponto
         </Link>
       </div>
