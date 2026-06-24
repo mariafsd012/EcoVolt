@@ -9,6 +9,7 @@ export default function RegistrarPonto() {
   const [dataHora, setDataHora] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setDataHora(new Date());
@@ -58,15 +59,13 @@ export default function RegistrarPonto() {
           onClick={async () => {
             setIsSubmitting(true);
             setMsg("");
+            setError("");
             try {
-              const registro = await pontoService.registrarPonto();
-              const hora = new Date(registro.dataHoraRegistro).toLocaleTimeString();
-              setMsg(`Ponto registrado com sucesso!`);
-              // mostra confirmação forte em verde (sem redirecionamento automático)
-              // o usuário pode navegar manualmente para a folha de ponto
+              await pontoService.registrarPonto();
+              setMsg("Ponto registrado com sucesso!");
             } catch (err) {
               console.error(err);
-              setMsg(err?.message || "Erro ao registrar ponto.");
+              setError("Erro ao registrar ponto");
             } finally {
               setIsSubmitting(false);
             }
@@ -88,6 +87,21 @@ export default function RegistrarPonto() {
             }}
           >
             {msg}
+          </div>
+        )}
+        {error && (
+          <div
+            style={{
+              marginTop: 12,
+              fontWeight: 700,
+              color: "#8b0000",
+              background: "#ffe5e5",
+              padding: "8px 12px",
+              borderRadius: 8,
+              display: "inline-block",
+            }}
+          >
+            {error}
           </div>
         )}
         <Link href="/ponto/controle" className={styles.linkFolha}>

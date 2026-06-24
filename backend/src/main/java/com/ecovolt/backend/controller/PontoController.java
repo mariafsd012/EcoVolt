@@ -1,32 +1,36 @@
 package com.ecovolt.backend.controller;
 
+import com.ecovolt.backend.model.ChamadoJustificativaFalta;
 import com.ecovolt.backend.model.RegistroPonto;
 import com.ecovolt.backend.security.JwtUtil;
+import com.ecovolt.backend.service.DesempenhoService;
 import com.ecovolt.backend.service.PontoService;
 import com.ecovolt.backend.repository.ColaboradorRepository;
+import com.ecovolt.backend.dto.EditarPontoRequest;
 import com.ecovolt.backend.dto.HistoricoPontoDTO;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import com.ecovolt.backend.dto.EditarPontoRequest;
-import com.ecovolt.backend.model.ChamadoJustificativaFalta;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ponto")
 public class PontoController {
 
     private final PontoService pontoService;
+    private final DesempenhoService desempenhoService;
     private final JwtUtil jwtUtil;
     private final ColaboradorRepository colaboradorRepository; 
 
-    public PontoController(PontoService pontoService, JwtUtil jwtUtil, ColaboradorRepository colaboradorRepository) {
+    public PontoController(PontoService pontoService, DesempenhoService desempenhoService, JwtUtil jwtUtil, ColaboradorRepository colaboradorRepository) {
         this.pontoService = pontoService;
+        this.desempenhoService = desempenhoService;
         this.jwtUtil = jwtUtil;
         this.colaboradorRepository = colaboradorRepository;
     }
@@ -81,6 +85,26 @@ public class PontoController {
         return ResponseEntity.ok(resposta);
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<Map<String, Object>> obterDashboard() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String requesterEmail = authentication.getName();
+        var requesterOpt = colaboradorRepository.findByEmail(requesterEmail);
+        if (requesterOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        var requester = requesterOpt.get();
+        Map<String, Object> dashboard = pontoService.buscarDashboardColaborador(requester.getId());
+        Map<String, Object> desempenho = desempenhoService.calcularDesempenho(requester.getId(), LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+        dashboard.put("desempenho", desempenho);
+        return ResponseEntity.ok(dashboard);
+    }
+
     @PutMapping("/{registroId}/editar")
     public ResponseEntity<RegistroPonto> editar(@PathVariable Long registroId,
                                                  @RequestBody EditarPontoRequest request) {
@@ -93,4 +117,13 @@ public class PontoController {
         ChamadoJustificativaFalta justificativa = pontoService.abonarFalta(chamadoId);
         return ResponseEntity.ok(justificativa);
     }
+
+    @GetMapping("/banco-horas/{colaboradorId}")
+public ResponseEntity<Map<String, Object>> calcularBancoHoras(
+        @PathVariable Long colaboradorId,
+        @RequestParam int mes,
+        @RequestParam int ano) {
+    Map<String, Object> resultado = pontoService.calcularBancoHoras(colaboradorId, mes, ano);
+    return ResponseEntity.ok(resultado);
+}
 }
