@@ -1,11 +1,13 @@
 .container {
   display: flex;
-  min-height: 100vh;
-  background: #f5f7f4;
+  height: 100vh;
+  overflow: hidden;
+  background: #f4f6f8;
 }
 
 .content {
   flex: 1;
-  padding: 20px;
-  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }

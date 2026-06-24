@@ -34,6 +34,9 @@ export default function RecuperarSenhaPage() {
                     Voltar para o login
                 </Link>
             </div>
+                  <footer className={styles.footer}>
+                    © 2025 EcoVolt. Todos os direitos reservados.
+                  </footer>
         </div>
     );
 }

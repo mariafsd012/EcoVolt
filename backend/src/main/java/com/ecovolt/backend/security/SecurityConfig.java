@@ -56,7 +56,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/api/colaboradores/cadastrar").permitAll()
+                .requestMatchers("/api/auth/**", "/api/colaboradores/cadastrar", "/api/colaboradores").permitAll()
+                    // Rotas de Ponto: todas as rotas de ponto exigem autenticação;
+                    // autorização adicional é tratada no controller quando necessário.
+                    .requestMatchers("/api/ponto/**").authenticated()
+                
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

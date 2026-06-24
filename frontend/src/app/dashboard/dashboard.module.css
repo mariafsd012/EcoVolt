@@ -1,423 +1,88 @@
-.container {
-  display: flex;
-  min-height: 100vh;
-}
-
-.content {
-  flex: 1;
-  padding: 20px;
-  background: #f5f6fa;
-}
-
 .dash {
-  padding: 1.5rem;
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  background: #f5f7f4;
-  min-height: 100vh;
-}
-
-/* ── Saudação ── */
-.greeting {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to top, #c4dcc1 0%, #e3eee0 40%, #f8faf7 100%);
+  color: #1a2e1a;
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 20px;
 }
 
-.greetingTitle {
-  font-size: 20px;
-  font-weight: 500;
-  color: #1a2e17;
-  margin: 0;
-}
-
-.greetingSub {
-  font-size: 13px;
-  color: #6a8a60;
-  margin-top: 2px;
-}
-
-.dateBadge {
-  font-size: 12px;
-  color: #6a8a60;
-  background: #ffffff;
-  border: 0.5px solid #d4dccf;
-  border-radius: 8px;
-  padding: 6px 12px;
-}
-
-/* ── Grids ── */
-.grid4 {
+.contentGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
 }
 
-.grid2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-/* ── Metric cards ── */
-.metricCard {
-  background: #ffffff;
-  border: 0.5px solid #d4dccf;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-}
-
-.metricLabel {
-  font-size: 12px;
-  color: #6a8a60;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-
-.metricValue {
-  font-size: 26px;
-  font-weight: 500;
-  color: #1a2e17;
-}
-
-.metricSub {
-  font-size: 12px;
-  color: #9ab890;
-  margin-top: 2px;
-}
-
-/* ── Card genérico ── */
 .card {
   background: #ffffff;
-  border: 0.5px solid #d4dccf;
-  border-radius: 12px;
-  padding: 1.25rem;
+  border: 1px solid #e2e8e4;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.cardTitle {
-  font-size: 15px;
-  font-weight: 500;
-  color: #1a2e17;
-  margin: 0 0 14px 0;
+.card:hover {
+  transform: translateY(-5px); /* Move o card levemente para cima */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); /* Aumenta a sombra para dar profundidade */
 }
 
-.cardLabel {
-  font-size: 11px;
-  color: #9ab890;
+.tituloBanco {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d3a2a;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 8px;
+  margin: 30px 0 16px 0;
+  letter-spacing: 0.05em;
 }
 
-/* ── Ponto ── */
-.clockDisplay {
+.horasGrid { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px; 
+}
+
+.horasCard {
+  background: #f8faf7;
+  border: 1px solid #e2e8e4;
+  border-radius: 16px;
+  padding: 16px;
   text-align: center;
-  padding: 8px 0 14px;
 }
 
-.clockTime {
-  font-size: 34px;
-  font-weight: 500;
-  color: #1a2e17;
-  letter-spacing: -1px;
-  font-variant-numeric: tabular-nums;
-}
+.horasLabel { font-size: 10px; color: #667064; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+.horasValor { font-size: 18px; font-weight: 700; color: #2d3a2a; }
 
-.clockDate {
-  font-size: 12px;
-  color: #9ab890;
-  margin-top: 2px;
-}
+.perfilHeader { display: flex; align-items: center; gap: 20px; }
+.avatarLarge { width: 80px; height: 80px; border-radius: 16px; background: #dbe4d8; color: #2d3a2a; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; }
+.nomeUsuario { font-size: 24px; font-weight: 700; margin: 0; color: #1a2e1a; }
+.badge { display: inline-block; background: #f3f6f0; color: #4a5a47; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-top: 8px; margin-right: 8px; font-weight: 500; }
 
-.pontoBtn {
-  width: 100%;
-  padding: 11px;
-  border-radius: 10px;
-  border: 0.5px solid #3a6b35;
-  background: #3a6b35;
-  color: #ffffff;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background 0.15s;
-}
+.desempenhoCard { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
-.pontoBtn:hover {
-  background: #2d4a28;
-  border-color: #2d4a28;
-}
-
-.pontoBtnSaida {
-  background: transparent;
-  color: #b05a55;
-  border-color: #b05a55;
-  margin-top: 8px;
-}
-
-.pontoBtnSaida:hover {
-  background: #fdecea;
-}
-
-.pontoRegistros {
-  margin-top: 16px;
-}
-
-.pontoRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 9px 0;
-  border-bottom: 0.5px solid #e8ede4;
-}
-
-.pontoRow:last-child {
-  border-bottom: none;
-}
-
-.pontoDay {
-  font-size: 13px;
-  color: #6a8a60;
-}
-
-.pontoHours {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1a2e17;
-}
-
-.pontoStatus {
-  font-size: 11px;
-  padding: 2px 9px;
-  border-radius: 99px;
-}
-
-.status_ok {
-  background: #eaf3de;
-  color: #3b6d11;
-}
-
-.status_late {
-  background: #faeeda;
-  color: #854f0b;
-}
-
-.status_absent {
-  background: #fcebeb;
-  color: #a32d2d;
-}
-
-/* ── Equipe ── */
-.teamMember {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 0.5px solid #e8ede4;
-}
-
-.teamMember:last-child {
-  border-bottom: none;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
+/* Círculo de Desempenho Dinâmico */
+.circulo {
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 500;
-  flex-shrink: 0;
+  margin: 20px 0;
+  background: radial-gradient(closest-side, #ffffff 75%, transparent 75% 100%),
+              conic-gradient(var(--cor-desempenho) var(--progresso), #e2e8e4 0);
 }
 
-.av_green { background: #c3d0b7; color: #2d4a28; }
-.av_blue  { background: #b5d4f4; color: #0c447c; }
-.av_amber { background: #fac775; color: #633806; }
-.av_coral { background: #f5c4b3; color: #712b13; }
+.notaValor { font-size: 32px; font-weight: 700; color: #2d3a2a; }
+.notaSub { font-size: 12px; color: #667064; }
 
-.memberName {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1a2e17;
-}
+.desempenhoBom { --cor-desempenho: #16a34a; }
+.desempenhoMedio { --cor-desempenho: #f59e0b; }
+.desempenhoRuim { --cor-desempenho: #dc2626; }
 
-.memberRole {
-  font-size: 11px;
-  color: #9ab890;
-}
-
-.memberStatus {
-  margin-left: auto;
-  font-size: 11px;
-  padding: 2px 9px;
-  border-radius: 99px;
-  white-space: nowrap;
-}
-
-.online  { background: #eaf3de; color: #3b6d11; }
-.away    { background: #faeeda; color: #854f0b; }
-
-/* ── Desempenho ── */
-.perfBarWrap {
-  margin-bottom: 12px;
-}
-
-.perfBarWrap:last-child {
-  margin-bottom: 0;
-}
-
-.perfBarLabel {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #6a8a60;
-  margin-bottom: 5px;
-}
-
-.perfBarTrack {
-  height: 6px;
-  background: #eef3ea;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.perfBarFill {
-  height: 100%;
-  border-radius: 99px;
-  background: #3a6b35;
-  transition: width 0.6s ease;
-}
-
-/* ── Treinamentos ── */
-.trainingItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 0.5px solid #e8ede4;
-}
-
-.trainingItem:last-child {
-  border-bottom: none;
-}
-
-.trainingIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: #eaf3de;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #3b6d11;
-  flex-shrink: 0;
-}
-
-.trainingName {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1a2e17;
-}
-
-.trainingDue {
-  font-size: 11px;
-  color: #9ab890;
-  margin-top: 1px;
-}
-
-.trainingProg {
-  margin-left: auto;
-  font-size: 12px;
-  font-weight: 500;
-  color: #3a6b35;
-  white-space: nowrap;
-}
-
-/* ── Suporte ── */
-.supportItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 0.5px solid #e8ede4;
-}
-
-.supportItem:last-child {
-  border-bottom: none;
-}
-
-.supportIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: #f5f7f4;
-  border: 0.5px solid #d4dccf;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6a8a60;
-  flex-shrink: 0;
-}
-
-.supportTitle {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1a2e17;
-}
-
-.supportMeta {
-  font-size: 11px;
-  color: #9ab890;
-  margin-top: 2px;
-}
-
-.supportBadge {
-  margin-left: auto;
-  font-size: 11px;
-  padding: 2px 9px;
-  border-radius: 99px;
-  white-space: nowrap;
-}
-
-.badge_open     { background: #e6f1fb; color: #185fa5; }
-.badge_resolved { background: #eaf3de; color: #3b6d11; }
-
-.newTicketBtn {
-  width: 100%;
-  margin-top: 12px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 0.5px solid #d4dccf;
-  background: transparent;
-  font-size: 13px;
-  color: #374f30;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.newTicketBtn:hover {
-  background: #eef3ea;
-  border-color: #9ab890;
-}
-
-/* ── Responsivo ── */
-@media (max-width: 768px) {
-  .grid4 { grid-template-columns: repeat(2, 1fr); }
-  .grid2 { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 480px) {
-  .grid4 { grid-template-columns: 1fr 1fr; }
-  .dash  { padding: 1rem; gap: 1rem; }
-}
+@media (max-width: 900px) { .contentGrid { grid-template-columns: 1fr; } }

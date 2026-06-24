@@ -1,0 +1,71 @@
+.container {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding: 32px;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.headerCard {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+}
+
+.nome {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.equipe {
+  color: #666;
+  font-weight: 500;
+}
+
+.tabelaContainer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cabecalho {
+  background-color: #f4f4f4; /* Cinza bem claro */
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.th {
+  padding: 16px;
+  font-size: 12px;
+  color: #555;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: left;
+}
+
+.td {
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Estilo para a coluna de ações (o ícone de editar) */
+.colunaAcao {
+  width: 50px;
+  text-align: center;
+}
+
+.linhaPar { background-color: #ffffff; }
+.linhaImpar { background-color: #fafafa; }
