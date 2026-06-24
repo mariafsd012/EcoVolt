@@ -1,350 +1,88 @@
-/* ── Base ── */
 .dash {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
-  background: #f4f6f8;
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(to top, #c4dcc1 0%, #e3eee0 40%, #f8faf7 100%);
+  color: #1a2e1a;
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 20px;
 }
 
-/* ── Header ── */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #ffffff;
-  border-bottom: 1px solid #e8eceb;
-  padding: 0 32px;
-  height: 76px;
-  flex-shrink: 0;
-}
-
-.headerUser {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.headerNome {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  color: #111827;
-  line-height: 1.2;
-}
-
-.headerSub {
-  margin: 0;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.headerData {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #374151;
-}
-
-.headerDataIcon {
-  color: #6b7280;
-}
-
-.headerDataTexto {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #111827;
-  line-height: 1.3;
-}
-
-.headerHora {
-  margin: 0;
-  font-size: 12px;
-  color: #6b7280;
-  font-variant-numeric: tabular-nums;
-}
-
-.notifBtn {
-  position: relative;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #374151;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.notifBadge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #16a34a;
-  color: white;
-  font-size: 9px;
-  font-weight: 700;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-}
-
-/* Avatar com foto real */
-.avatarFoto {
-  position: relative;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  overflow: visible;
-}
-
-.avatarImg {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
-}
-
-.avatarInitial {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #d1fae5;
-  color: #065f46;
-  font-size: 16px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatarOnline {
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  width: 11px;
-  height: 11px;
-  background: #16a34a;
-  border-radius: 50%;
-  border: 2px solid white;
-}
-
-/* ── Main ── */
-.main {
-  flex: 1;
-  padding: 28px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ── Grids ── */
-.gridTop {
+.contentGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) 280px;
-  gap: 16px;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
 }
 
-.gridBottom {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-/* ── Card departamento ── */
-.depCard {
+.card {
   background: #ffffff;
-  border: 1px solid #e8eceb;
-  border-radius: 16px;
-  padding: 20px 22px;
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.15s;
+  border: 1px solid #e2e8e4;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.depCard:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+.card:hover {
+  transform: translateY(-5px); /* Move o card levemente para cima */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); /* Aumenta a sombra para dar profundidade */
 }
 
-.depHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.depIconWrap {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.depNome {
-  font-size: 15px;
+.tituloBanco {
+  font-size: 13px;
   font-weight: 700;
-  color: #111827;
+  color: #2d3a2a;
+  text-transform: uppercase;
+  margin: 30px 0 16px 0;
+  letter-spacing: 0.05em;
 }
 
-/* ── Indicadores ── */
-.depIndicadores {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  flex: 1;
-  margin-bottom: 18px;
+.horasGrid { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px; 
 }
 
-.indicador {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.indicadorIcon {
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.indicadorValor {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 700;
-  color: #111827;
-  line-height: 1;
-}
-
-.indicadorAlerta {
-  color: #dc2626;
-}
-
-.indicadorLabel {
-  margin: 3px 0 0;
-  font-size: 12px;
-  color: #6b7280;
-  line-height: 1.3;
-}
-
-/* ── Ver detalhes ── */
-.verDetalhes {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  border-top: 1px solid #f0f4f0;
-  padding: 14px 0 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: #16a34a;
-  cursor: pointer;
-  margin-top: auto;
-  width: fit-content;
-  transition: gap 0.15s;
-}
-
-.verDetalhes:hover {
-  gap: 8px;
-}
-
-/* ── Card de avisos ── */
-.avisosCard {
-  background: #ffffff;
-  border: 1px solid #e8eceb;
+.horasCard {
+  background: #f8faf7;
+  border: 1px solid #e2e8e4;
   border-radius: 16px;
-  padding: 20px 22px;
-  display: flex;
-  flex-direction: column;
-}
-
-.avisosList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  margin-bottom: 14px;
-}
-
-.avisoItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 12px;
-  border-radius: 10px;
-  background: #f9fafb;
-  border: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.avisoItem:hover {
-  background: #f0fdf4;
-}
-
-.avisoTitulo {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: #111827;
-}
-
-.avisoDetalhe {
-  margin: 2px 0 0;
-  font-size: 11px;
-  color: #6b7280;
-}
-
-.avisoArrow {
-  color: #9ca3af;
-  flex-shrink: 0;
-}
-
-.verTodos {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: #16a34a;
-  cursor: pointer;
-  text-align: left;
-  margin-top: auto;
-}
-
-/* ── Footer ── */
-.footer {
-  text-align: center;
-  font-size: 12px;
-  color: #9ca3af;
   padding: 16px;
-  border-top: 1px solid #e8eceb;
-  background: #ffffff;
+  text-align: center;
 }
 
-/* ── Responsivo ── */
-@media (max-width: 1200px) {
-  .gridTop    { grid-template-columns: repeat(2, 1fr); }
-  .gridBottom { grid-template-columns: repeat(2, 1fr); }
+.horasLabel { font-size: 10px; color: #667064; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+.horasValor { font-size: 18px; font-weight: 700; color: #2d3a2a; }
+
+.perfilHeader { display: flex; align-items: center; gap: 20px; }
+.avatarLarge { width: 80px; height: 80px; border-radius: 16px; background: #dbe4d8; color: #2d3a2a; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; }
+.nomeUsuario { font-size: 24px; font-weight: 700; margin: 0; color: #1a2e1a; }
+.badge { display: inline-block; background: #f3f6f0; color: #4a5a47; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-top: 8px; margin-right: 8px; font-weight: 500; }
+
+.desempenhoCard { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+/* Círculo de Desempenho Dinâmico */
+.circulo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  background: radial-gradient(closest-side, #ffffff 75%, transparent 75% 100%),
+              conic-gradient(var(--cor-desempenho) var(--progresso), #e2e8e4 0);
 }
 
-@media (max-width: 768px) {
-  .gridTop    { grid-template-columns: 1fr; }
-  .gridBottom { grid-template-columns: 1fr; }
-  .main       { padding: 16px; }
-  .header     { padding: 0 16px; }
-}
+.notaValor { font-size: 32px; font-weight: 700; color: #2d3a2a; }
+.notaSub { font-size: 12px; color: #667064; }
+
+.desempenhoBom { --cor-desempenho: #16a34a; }
+.desempenhoMedio { --cor-desempenho: #f59e0b; }
+.desempenhoRuim { --cor-desempenho: #dc2626; }
+
+@media (max-width: 900px) { .contentGrid { grid-template-columns: 1fr; } }

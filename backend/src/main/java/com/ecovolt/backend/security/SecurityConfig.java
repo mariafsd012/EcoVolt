@@ -58,8 +58,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/colaboradores/cadastrar", "/api/colaboradores").permitAll()
                 
-                // Rotas de Ponto: controller fará a checagem de propriedade/roles
-                .requestMatchers("/api/ponto/historico/**").authenticated()
+                // Rotas de Ponto: todas as rotas de ponto exigem autenticação.
+                .requestMatchers("/api/ponto/**").authenticated()
                 
                 .anyRequest().authenticated()
             )
