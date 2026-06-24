@@ -2,7 +2,6 @@ package com.ecovolt.backend.service;
 
 import com.ecovolt.backend.dto.EditarPontoRequest;
 import com.ecovolt.backend.dto.HistoricoPontoDTO;
-import com.ecovolt.backend.model.BancoHoras;
 import com.ecovolt.backend.model.ChamadoJustificativaFalta;
 import com.ecovolt.backend.model.Colaborador;
 import com.ecovolt.backend.model.Escala;
@@ -18,7 +17,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,8 +65,7 @@ public class PontoService {
 
     public List<HistoricoPontoDTO> buscarHistoricoAgrupado(Long colaboradorId) {
         List<RegistroPonto> registros = registroPontoRepository.findByColaboradorIdOrderByDataHoraRegistroAsc(colaboradorId);
-        
-        // Agrupa registros por data
+
         Map<LocalDate, List<RegistroPonto>> agrupados = registros.stream()
                 .collect(Collectors.groupingBy(r -> r.getDataHoraRegistro().toLocalDate()));
 
@@ -72,13 +73,12 @@ public class PontoService {
             List<RegistroPonto> doDia = entry.getValue();
             HistoricoPontoDTO dto = new HistoricoPontoDTO();
             dto.setData(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            
-            // Preenche horários conforme ordem cronológica
+
             if (doDia.size() > 0) dto.setEntrada1(formatarHora(doDia.get(0)));
             if (doDia.size() > 1) dto.setSaida1(formatarHora(doDia.get(1)));
             if (doDia.size() > 2) dto.setEntrada2(formatarHora(doDia.get(2)));
             if (doDia.size() > 3) dto.setSaida2(formatarHora(doDia.get(3)));
-            
+
             return dto;
         }).sorted(Comparator.comparing(HistoricoPontoDTO::getData).reversed()).collect(Collectors.toList());
     }
@@ -94,7 +94,8 @@ public class PontoService {
                 "nome", colaborador.getNome(),
                 "cargo", colaborador.getCargo() != null ? colaborador.getCargo().name() : "Não definido",
                 "setor", colaborador.getSetor() != null ? colaborador.getSetor().name() : "Não definido",
-                "papeis", colaborador.getPapeis().stream().map(p -> p.getNome()).toList()
+                "equipe", colaborador.getSetor() != null ? colaborador.getSetor().name() : "Não definido",
+                "papeis", colaborador.getPapeis().stream().map(p -> p.getNome().name()).toList()
         ));
 
         return dashboard;
@@ -156,7 +157,6 @@ public class PontoService {
             }
         }
 
-        Optional<BancoHoras> bancoHorasOpt = bancoHorasRepository.findByColaboradorId(colaboradorId);
         Map<String, Object> resultado = new HashMap<>();
         resultado.put("colaboradorId", colaboradorId);
         resultado.put("mes", mes);
@@ -164,17 +164,6 @@ public class PontoService {
         resultado.put("horasTotais", formatarDuracao(totalTrabalhado));
         resultado.put("horasExtras", formatarDuracao(totalExtras));
         resultado.put("horasFaltantes", formatarDuracao(totalFaltantes));
-
-        if (bancoHorasOpt.isPresent()) {
-            BancoHoras bancoHoras = bancoHorasOpt.get();
-            resultado.put("bancoHorasExtras", bancoHoras.getHorasExtras());
-            resultado.put("bancoHorasFaltantes", bancoHoras.getHorasFaltantes());
-            resultado.put("bancoHorasAtualizadoEm", bancoHoras.getAtualizadoEm());
-        } else {
-            resultado.put("bancoHorasExtras", 0);
-            resultado.put("bancoHorasFaltantes", 0);
-            resultado.put("bancoHorasAtualizadoEm", null);
-        }
 
         return resultado;
     }

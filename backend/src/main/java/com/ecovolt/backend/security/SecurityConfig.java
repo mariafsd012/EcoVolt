@@ -57,10 +57,10 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/colaboradores/cadastrar", "/api/colaboradores").permitAll()
-                    // Rotas de Ponto: todas as rotas de ponto exigem autenticação;
-                    // autorização adicional é tratada no controller quando necessário.
-                    .requestMatchers("/api/ponto/**").authenticated()
-                
+
+                // Rotas de Ponto: todas as rotas de ponto exigem autenticação.
+                .requestMatchers("/api/ponto/**").authenticated()
+
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

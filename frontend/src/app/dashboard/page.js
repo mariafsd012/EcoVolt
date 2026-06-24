@@ -29,6 +29,12 @@ export default function Dashboard() {
   const { colaborador, horasTotais, bancoHorasExtras, bancoHorasFaltantes, desempenho } = dashboard;
   const notaFinal = desempenho?.notaFinal ?? 0;
 
+  function getDesempenhoLabel(score) {
+    if (score >= 70) return "Bom";
+    if (score >= 50) return "Médio";
+    return "Ruim";
+  }
+
   function getDesempenhoClass(score) {
     if (score >= 70) return styles.desempenhoBom;
     if (score >= 50) return styles.desempenhoMedio;
@@ -83,6 +89,10 @@ export default function Dashboard() {
             <span className={styles.notaValor}>{notaFinal}</span>
             <span className={styles.notaSub}>de 100</span>
           </div>
+          
+          <p style={{ fontWeight: 'bold', fontSize: '18px', color: '#2d3a2a' }}>
+            {getDesempenhoLabel(notaFinal)}
+          </p>
         </section>
 
       </div>
