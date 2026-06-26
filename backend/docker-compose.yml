@@ -6,6 +6,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
       POSTGRES_DB: ecovolt
+      PGTZ: America/Fortaleza
     ports:
       - "5432:5432"
     volumes:
@@ -21,6 +22,7 @@ services:
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin123
       SERVER_PORT: 8000
+      TZ: America/Fortaleza
     ports:
       - "8000:8000"
     restart: on-failure

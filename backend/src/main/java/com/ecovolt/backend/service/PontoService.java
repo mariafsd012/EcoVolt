@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PontoService {
+
+    private static final ZoneId FUSO = ZoneId.of("America/Fortaleza");
 
     private final RegistroPontoRepository registroPontoRepository;
     private final ColaboradorRepository colaboradorRepository;
@@ -45,8 +48,8 @@ public class PontoService {
         Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
 
-        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
-        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
+        LocalDateTime inicioDia = LocalDate.now(FUSO).atStartOfDay();
+        LocalDateTime fimDia = LocalDate.now(FUSO).atTime(23, 59, 59);
 
         List<RegistroPonto> registrosHoje = registroPontoRepository
                 .findByColaboradorIdAndDataHoraRegistroBetweenOrderByDataHoraRegistroAsc(colaboradorId, inicioDia, fimDia);
@@ -57,7 +60,7 @@ public class PontoService {
 
         RegistroPonto registro = new RegistroPonto();
         registro.setColaborador(colaborador);
-        registro.setDataHoraRegistro(LocalDateTime.now());
+        registro.setDataHoraRegistro(LocalDateTime.now(FUSO));
         registro.setTipo(registrosHoje.size() % 2 == 0 ? RegistroPonto.TipoPonto.ENTRADA : RegistroPonto.TipoPonto.SAIDA);
 
         return registroPontoRepository.save(registro);
@@ -87,7 +90,7 @@ public class PontoService {
         Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
 
-        Map<String, Object> bancoHoras = calcularBancoHoras(colaboradorId, LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+        Map<String, Object> bancoHoras = calcularBancoHoras(colaboradorId, LocalDate.now(FUSO).getMonthValue(), LocalDate.now(FUSO).getYear());
         Map<String, Object> dashboard = new HashMap<>(bancoHoras);
         dashboard.put("colaborador", Map.of(
                 "id", colaborador.getId(),

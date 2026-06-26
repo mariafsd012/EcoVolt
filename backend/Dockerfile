@@ -1,4 +1,4 @@
-FROM maven:3.8.8-openjdk-17 AS build
+FROM maven:3.8.8-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
