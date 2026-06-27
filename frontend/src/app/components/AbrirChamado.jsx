@@ -23,12 +23,11 @@ const campoStyle = {
 export default function AbrirChamado({
   chamado = { tipo: "", detalhamento: "" },
   tiposChamado = [
-    { value: "ponto", label: "Ponto" },
-    { value: "ehs", label: "EHS" },
-    { value: "ti", label: "T.I" },
-    { value: "rh", label: "RH" },
-    { value: "moradia", label: "Moradia" },
-    { value: "frota", label: "Frota" },
+    { value: "justificar_falta", label: "Justificar falta" },
+    { value: "ajuste_ponto", label: "Ajuste de ponto" },
+    { value: "erro_salarial", label: "Erro salarial" },
+    { value: "erro_beneficio", label: "Erro no benefício" },
+    { value: "outros", label: "Outros" },
   ],
   onChangeCampo,
   onAbrirChamado,

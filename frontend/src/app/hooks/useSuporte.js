@@ -48,11 +48,25 @@ export function useSuporte() {
     }
   }
 
+  async function alterarSituacao(chamadoId, situacao) {
+    setChamados((prev) =>
+      prev.map((item) =>
+        item.id === chamadoId ? { ...item, situacao } : item
+      )
+    );
+    try {
+      await suporteService.atualizarSituacaoChamado(chamadoId, situacao);
+    } catch (err) {
+      setErroLista(err);
+    }
+  }
+
   return {
     chamado,
     chamados,
     atualizarCampoChamado,
     abrirChamado,
+    alterarSituacao,
     isSubmitting,
     isLoadingLista,
     erro,

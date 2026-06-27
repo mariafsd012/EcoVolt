@@ -13,4 +13,9 @@ export const suporteService = {
   async listarChamados(options = {}) {
     return apiClient.get(`/api/suporte/chamados`, options);
   },
+
+  /** Atualiza a situação (pendente, em andamento, resolvido, recusado) de um chamado */
+  async atualizarSituacaoChamado(chamadoId, situacao, options = {}) {
+    return apiClient.patch(`/api/suporte/chamados/${chamadoId}/situacao`, { situacao }, options);
+  },
 };
