@@ -67,6 +67,14 @@ public class PontoService {
     }
 
     public List<HistoricoPontoDTO> buscarHistoricoAgrupado(Long colaboradorId) {
+        Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
+                .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
+
+        Escala escala = colaborador.getEscala();
+        Duration cargaDiaria = (escala != null)
+                ? Duration.between(escala.getHoraInicio(), escala.getHoraFim())
+                : Duration.ofHours(8);
+
         List<RegistroPonto> registros = registroPontoRepository.findByColaboradorIdOrderByDataHoraRegistroAsc(colaboradorId);
 
         Map<LocalDate, List<RegistroPonto>> agrupados = registros.stream()
@@ -81,6 +89,31 @@ public class PontoService {
             if (doDia.size() > 1) dto.setSaida1(formatarHora(doDia.get(1)));
             if (doDia.size() > 2) dto.setEntrada2(formatarHora(doDia.get(2)));
             if (doDia.size() > 3) dto.setSaida2(formatarHora(doDia.get(3)));
+
+            // Calcula HT (horas trabalhadas) somando pares entrada->saída
+            Duration totalTrabalhado = Duration.ZERO;
+            for (int i = 0; i + 1 < doDia.size(); i += 2) {
+                RegistroPonto entrada = doDia.get(i);
+                RegistroPonto saida = doDia.get(i + 1);
+                if (entrada.getTipo() == RegistroPonto.TipoPonto.ENTRADA
+                        && saida.getTipo() == RegistroPonto.TipoPonto.SAIDA) {
+                    totalTrabalhado = totalTrabalhado.plus(
+                            Duration.between(entrada.getDataHoraRegistro(), saida.getDataHoraRegistro()));
+                }
+            }
+
+            // Só preenche HT/HR/HE se houver ao menos um par completo
+            if (!totalTrabalhado.isZero()) {
+                dto.setHt(formatarDuracao(totalTrabalhado));
+
+                if (totalTrabalhado.compareTo(cargaDiaria) > 0) {
+                    dto.setHe(formatarDuracao(totalTrabalhado.minus(cargaDiaria)));
+                    dto.setHr("0h00min");
+                } else {
+                    dto.setHr(formatarDuracao(cargaDiaria.minus(totalTrabalhado)));
+                    dto.setHe("0h00min");
+                }
+            }
 
             return dto;
         }).sorted(Comparator.comparing(HistoricoPontoDTO::getData).reversed()).collect(Collectors.toList());
