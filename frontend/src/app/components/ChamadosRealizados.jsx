@@ -10,8 +10,8 @@ const heebo = Heebo({
 
 const SITUACAO_ESTILO = {
   aberto: { background: "#f3f6f0", texto: "#7d8d78", label: "Aberto" },
-  em_andamento: { background: "#fbf0d9", texto: "#9a7b2e", label: "Em andamento" },
-  resolvido: { background: "#dbe8d1", texto: "#3a6b35", label: "Resolvido" },
+  pendente: { background: "#fbf0d9", texto: "#9a7b2e", label: "Em andamento" },
+  finalizado: { background: "#dbe8d1", texto: "#3a6b35", label: "Resolvido" },
   recusado: { background: "#f6dedd", texto: "#b05a55", label: "Recusado" },
 };
 
@@ -25,7 +25,6 @@ export default function ChamadosRealizados({
       style={{ backgroundColor: "#ffffff", borderRadius: "16px", padding: "32px" }}
       className={heebo.className}
     >
-      {/* HEADER */}
       <div
         style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}
       >
@@ -35,7 +34,6 @@ export default function ChamadosRealizados({
         </h2>
       </div>
 
-      {/* CABEÇALHO DA LISTA */}
       <div
         style={{
           display: "flex",
@@ -52,7 +50,6 @@ export default function ChamadosRealizados({
         </span>
       </div>
 
-      {/* LISTA DE CHAMADOS */}
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {isLoading && (
           <div style={{ textAlign: "center", padding: "32px", fontSize: "14px", color: "#8a9a85" }}>
@@ -75,7 +72,7 @@ export default function ChamadosRealizados({
         {!isLoading &&
           !erro &&
           chamados.map((chamado) => {
-            const estilo = SITUACAO_ESTILO[chamado.situacao] ?? SITUACAO_ESTILO.aberto;
+            const estilo = SITUACAO_ESTILO[chamado.status?.toLowerCase()] ?? SITUACAO_ESTILO.aberto;
             return (
               <div
                 key={chamado.id}
@@ -90,7 +87,7 @@ export default function ChamadosRealizados({
                 }}
               >
                 <span style={{ fontSize: "14px", color: "#374f30" }}>
-                  {chamado.detalhamento}
+                  {chamado.descricao}
                 </span>
                 <span
                   style={{
