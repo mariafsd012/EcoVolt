@@ -1,0 +1,45 @@
+.painelContainer {
+  padding: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.tituloPainel { font-size: 24px; font-weight: 700; color: #1a2e1a; margin: 0; }
+.subtitulo { color: #667064; font-size: 14px; margin: 4px 0 0 0; }
+
+.userBadge { display: flex; align-items: center; gap: 12px; }
+.avatar { 
+  width: 40px; height: 40px; border-radius: 50%; 
+  background: #2d3a2a; color: white; display: flex; 
+  align-items: center; justify-content: center; font-weight: bold; 
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8e4;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  margin-bottom: 24px;
+}
+
+.labelSection {
+  font-size: 11px; font-weight: 700; color: #4a5a47; 
+  text-transform: uppercase; margin-bottom: 16px; display: block;
+}
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+.itemLista {
+  background: #f8faf7; border-radius: 12px; padding: 14px; 
+  margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+  color: #374f30; font-size: 14px;
+}
