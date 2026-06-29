@@ -1,71 +1,227 @@
-.container {
-  min-height: 100vh;
-  background-color: #f9f9f9;
-  padding: 32px;
-}
+"use client";
 
-.content {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+import { useEffect, useState } from "react";
+import { Heebo } from "next/font/google";
+import { SquarePen } from "lucide-react";
+import { pontoService } from "../pontoService";
+import PontoHeader from "../../../components/PontoHeader";
+import ModalEditarPonto from "../../../components/ModalEditarPonto";
+import { useRouter, useParams } from "next/navigation";
 
-.headerCard {
-  background-color: #ffffff;
-  padding: 24px;
-  border-radius: 8px;
-  margin-bottom: 24px;
-  border: 1px solid #e0e0e0;
-}
+const heebo = Heebo({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
-.nome {
-  font-size: 18px;
-  font-weight: 700;
-  color: #333;
-}
+const celulaStyle = {
+  padding: "16px 24px",
+  fontSize: "14px",
+  color: "#333333",
+};
 
-.equipe {
-  color: #666;
-  font-weight: 500;
-}
+export default function DetalhesHistoricoPage() {
+  const [historico, setHistorico] = useState([]);
+  const [colaborador, setColaborador] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [erroMsg, setErroMsg] = useState("");
+  const [registroSelecionado, setRegistroSelecionado] = useState(null);
+  const router = useRouter();
+  const params = useParams();
+  const id = params?.id;
 
-.tabelaContainer {
-  background-color: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  overflow: hidden;
-}
+  useEffect(() => {
+    async function carregarDados() {
+      if (!id) return;
 
-.tabela {
-  width: 100%;
-  border-collapse: collapse;
-}
+      try {
+        setIsLoading(true);
+        // Se não estiver autenticado, redireciona para login
+        const token = typeof window !== "undefined" ? window.localStorage.getItem("token") : null;
+        if (!token) {
+          router.push("/login");
+          return;
+        }
 
-.cabecalho {
-  background-color: #f4f4f4; /* Cinza bem claro */
-  border-bottom: 2px solid #e0e0e0;
-}
+        const data = await pontoService.buscarHistoricoAgrupado(id);
 
-.th {
-  padding: 16px;
-  font-size: 12px;
-  color: #555;
-  text-transform: uppercase;
-  font-weight: 700;
-  text-align: left;
-}
+        setHistorico(data.registros || []);
+        setColaborador(
+          data.colaborador || { nome: "Não encontrado", setor: "-" }
+        );
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        // Se for erro de autorização, leva ao login
+        if (error?.status === 401) {
+          window.localStorage.removeItem("token");
+          router.push("/login");
+          return;
+        }
 
-.td {
-  padding: 16px;
-  font-size: 14px;
-  color: #333;
-  border-bottom: 1px solid #f0f0f0;
-}
+        if (error?.status === 403) {
+          setErroMsg("Acesso negado: você não tem permissão para ver este histórico.");
+          return;
+        }
 
-/* Estilo para a coluna de ações (o ícone de editar) */
-.colunaAcao {
-  width: 50px;
-  text-align: center;
-}
+        setErroMsg("Erro ao carregar histórico. Tente novamente mais tarde.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-.linhaPar { background-color: #ffffff; }
-.linhaImpar { background-color: #fafafa; }
+    carregarDados();
+  }, [params?.id]);
+
+  async function handleSalvarApontamentos(registroId, payload) {
+    await pontoService.editarRegistro(registroId, payload);
+    setHistorico((prev) =>
+      prev.map((item) => (item.id === registroId ? { ...item, ...payload } : item))
+    );
+    setRegistroSelecionado(null);
+  }
+
+  async function handleLancarJustificativa(payload) {
+    await pontoService.lancarJustificativaAusencia(payload);
+    setRegistroSelecionado(null);
+  }
+
+  return (
+    <div className={`min-h-screen bg-[#f8faf7] p-8 ${heebo.className}`}>
+      <PontoHeader />
+
+      <div className="w-full mt-5 px-[10px]">
+        {/* Header do colaborador */}
+        <div
+          style={{
+            backgroundColor: "#dbe4d8",
+            padding: "24px",
+            borderRadius: "16px",
+            marginBottom: "24px",
+          }}
+        >
+          <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#2d3a2a" }}>
+            Colaborador: {colaborador?.nome || "Carregando..."}
+          </h2>
+          <p style={{ color: "#4a5a47", fontWeight: "500" }}>
+            Equipe: {colaborador?.setor || "-"}
+          </p>
+        </div>
+
+        {/* Tabela */}
+        <section
+          className={heebo.className}
+          style={{
+            backgroundColor: "#ffffff",
+            borderRadius: "16px",
+            overflow: "hidden",
+          }}
+        >
+          {erroMsg && (
+            <div style={{ padding: 16, color: "#a33", fontWeight: 600 }}>{erroMsg}</div>
+          )}
+
+          <table
+            style={{
+              width: "100%",
+              textAlign: "left",
+              borderCollapse: "collapse",
+            }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f3f6f0" }}>
+                {[
+                  "Data",
+                  "1ª Entr.",
+                  "1ª Saída",
+                  "2ª Entr.",
+                  "2ª Saída",
+                  "HT",
+                  "HR",
+                  "HE",
+                ].map((head) => (
+                  <th
+                    key={head}
+                    style={{
+                      padding: "16px 24px",
+                      fontSize: "12px",
+                      color: "#7d8d78",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {head}
+                  </th>
+                ))}
+                <th style={{ width: "60px" }} />
+              </tr>
+            </thead>
+
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan={9}
+                    style={{
+                      ...celulaStyle,
+                      textAlign: "center",
+                      padding: "40px 24px",
+                      color: "#8a9a85",
+                    }}
+                  >
+                    Carregando histórico...
+                  </td>
+                </tr>
+              ) : historico.length === 0 ? (
+                <tr>
+                  <td colSpan={9} style={{ ...celulaStyle, textAlign: "center", padding: "24px" }}>
+                    Nenhum registro encontrado para este colaborador.
+                  </td>
+                </tr>
+              ) : (
+                historico.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    style={{
+                      backgroundColor:
+                        index % 2 === 0 ? "#ffffff" : "#f7faf5",
+                      borderTop: "1px solid #eef2ea",
+                    }}
+                  >
+                    <td style={celulaStyle}>{item.data}</td>
+                    <td style={celulaStyle}>{item.entrada1 || "-"}</td>
+                    <td style={celulaStyle}>{item.saida1 || "-"}</td>
+                    <td style={celulaStyle}>{item.entrada2 || "-"}</td>
+                    <td style={celulaStyle}>{item.saida2 || "-"}</td>
+                    <td style={celulaStyle}>{item.ht || "-"}</td>
+                    <td style={celulaStyle}>{item.hr || "-"}</td>
+                    <td style={celulaStyle}>{item.he || "-"}</td>
+                    <td style={{ ...celulaStyle, textAlign: "right" }}>
+                      <button
+                        type="button"
+                        onClick={() => setRegistroSelecionado(item)}
+                        aria-label={`Editar registro de ${item.data}`}
+                        style={{ color: "#3a6b35", border: "none", backgroundColor: "transparent" }}
+                        className="hover:opacity-70 transition-opacity"
+                      >
+                        <SquarePen size={17} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      {registroSelecionado && (
+        <ModalEditarPonto
+          registro={registroSelecionado}
+          onClose={() => setRegistroSelecionado(null)}
+          onSalvarApontamentos={handleSalvarApontamentos}
+          onLancarJustificativa={handleLancarJustificativa}
+        />
+      )}
+    </div>
+  );
+}

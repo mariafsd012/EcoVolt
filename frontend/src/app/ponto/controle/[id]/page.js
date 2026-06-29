@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Heebo } from "next/font/google";
+import { SquarePen } from "lucide-react";
 import { pontoService } from "../pontoService";
 import PontoHeader from "../../../components/PontoHeader";
+import ModalEditarPonto from "../../../components/ModalEditarPonto";
 import { useRouter, useParams } from "next/navigation";
 
 const heebo = Heebo({
@@ -22,6 +24,7 @@ export default function DetalhesHistoricoPage() {
   const [colaborador, setColaborador] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [erroMsg, setErroMsg] = useState("");
+  const [registroSelecionado, setRegistroSelecionado] = useState(null);
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
@@ -67,6 +70,29 @@ export default function DetalhesHistoricoPage() {
 
     carregarDados();
   }, [params?.id]);
+
+  async function handleSalvarApontamentos(registroAlvo, payload) {
+    if (registroAlvo?.id !== undefined && registroAlvo?.id !== null) {
+      await pontoService.editarRegistro(registroAlvo.id, payload);
+    }
+    setHistorico((prev) =>
+      prev.map((item, index) =>
+        registroAlvo?.id !== undefined && registroAlvo?.id !== null
+          ? item.id === registroAlvo.id
+            ? { ...item, ...payload }
+            : item
+          : index === registroAlvo?._index
+          ? { ...item, ...payload }
+          : item
+      )
+    );
+    setRegistroSelecionado(null);
+  }
+
+  async function handleLancarJustificativa(payload) {
+    await pontoService.lancarJustificativaAusencia(payload);
+    setRegistroSelecionado(null);
+  }
 
   return (
     <div className={`min-h-screen bg-[#f8faf7] p-8 ${heebo.className}`}>
@@ -136,6 +162,7 @@ export default function DetalhesHistoricoPage() {
                     {head}
                   </th>
                 ))}
+                <th style={{ width: "60px" }} />
               </tr>
             </thead>
 
@@ -143,7 +170,7 @@ export default function DetalhesHistoricoPage() {
               {isLoading ? (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     style={{
                       ...celulaStyle,
                       textAlign: "center",
@@ -156,14 +183,14 @@ export default function DetalhesHistoricoPage() {
                 </tr>
               ) : historico.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ ...celulaStyle, textAlign: "center", padding: "24px" }}>
+                  <td colSpan={9} style={{ ...celulaStyle, textAlign: "center", padding: "24px" }}>
                     Nenhum registro encontrado para este colaborador.
                   </td>
                 </tr>
               ) : (
                 historico.map((item, index) => (
                   <tr
-                    key={item.id}
+                    key={item.id ?? `${item.data ?? "registro"}-${index}`}
                     style={{
                       backgroundColor:
                         index % 2 === 0 ? "#ffffff" : "#f7faf5",
@@ -178,6 +205,17 @@ export default function DetalhesHistoricoPage() {
                     <td style={celulaStyle}>{item.ht || "-"}</td>
                     <td style={celulaStyle}>{item.hr || "-"}</td>
                     <td style={celulaStyle}>{item.he || "-"}</td>
+                    <td style={{ ...celulaStyle, textAlign: "right" }}>
+                      <button
+                        type="button"
+                        onClick={() => setRegistroSelecionado({ ...item, _index: index })}
+                        aria-label={`Editar registro de ${item.data}`}
+                        style={{ color: "#3a6b35", border: "none", backgroundColor: "transparent" }}
+                        className="hover:opacity-70 transition-opacity"
+                      >
+                        <SquarePen size={17} />
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -185,6 +223,15 @@ export default function DetalhesHistoricoPage() {
           </table>
         </section>
       </div>
+
+      {registroSelecionado && (
+        <ModalEditarPonto
+          registro={registroSelecionado}
+          onClose={() => setRegistroSelecionado(null)}
+          onSalvarApontamentos={handleSalvarApontamentos}
+          onLancarJustificativa={handleLancarJustificativa}
+        />
+      )}
     </div>
   );
 }
