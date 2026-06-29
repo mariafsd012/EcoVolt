@@ -16,13 +16,6 @@ const heebo = Heebo({
   weight: ["400", "500", "600", "700"],
 });
 
-const linhasApontamento = [
-  { chave: "entrada1", label: "Entrada 1", tipo: "entrada" },
-  { chave: "saida1", label: "Saída 1", tipo: "saida" },
-  { chave: "entrada2", label: "Entrada 2", tipo: "entrada" },
-  { chave: "saida2", label: "Saída 2", tipo: "saida" },
-];
-
 const motivosAusencia = [
   { value: "consulta_medica", label: "Consulta médica" },
   { value: "a_servico_da_empresa", label: "A serviço da empresa" },
@@ -47,11 +40,18 @@ export default function ModalEditarPonto({
   onSalvarApontamentos,
   onLancarJustificativa,
 }) {
+  const linhasApontamento = [
+    { chave: "entrada1", label: "Entrada 1", tipo: "entrada", idChave: "idEntrada1" },
+    { chave: "saida1",   label: "Saída 1",   tipo: "saida",   idChave: "idSaida1"   },
+    { chave: "entrada2", label: "Entrada 2", tipo: "entrada", idChave: "idEntrada2" },
+    { chave: "saida2",   label: "Saída 2",   tipo: "saida",   idChave: "idSaida2"   },
+  ];
+
   const [apontamentos, setApontamentos] = useState({
     entrada1: registro?.entrada1 ?? "",
-    saida1: registro?.saida1 ?? "",
+    saida1:   registro?.saida1   ?? "",
     entrada2: registro?.entrada2 ?? "",
-    saida2: registro?.saida2 ?? "",
+    saida2:   registro?.saida2   ?? "",
   });
   const [editandoCampo, setEditandoCampo] = useState(null);
   const [isSalvandoApontamentos, setIsSalvandoApontamentos] = useState(false);
@@ -81,10 +81,30 @@ export default function ModalEditarPonto({
     setJustificativa((prev) => ({ ...prev, [campo]: valor }));
   }
 
+  // Converte "HH:mm" + data do registro para LocalDateTime no formato ISO
+  function montarDataHora(hora) {
+    if (!hora || !registro?.data) return null;
+    // registro.data vem como "dd/MM/yyyy"
+    const [dia, mes, ano] = registro.data.split("/");
+    return `${ano}-${mes}-${dia}T${hora}:00`;
+  }
+
   async function salvarApontamentos() {
     setIsSalvandoApontamentos(true);
     try {
-      await onSalvarApontamentos?.(registro, apontamentos);
+      // Envia um PUT por registro que foi alterado
+      for (const linha of linhasApontamento) {
+        const idRegistro = registro?.[linha.idChave];
+        const horaAtual = apontamentos[linha.chave];
+        const horaOriginal = registro?.[linha.chave] ?? "";
+
+        if (idRegistro && horaAtual && horaAtual !== horaOriginal) {
+          const dataHoraRegistro = montarDataHora(horaAtual);
+          const tipo = linha.tipo === "entrada" ? "ENTRADA" : "SAIDA";
+          await onSalvarApontamentos?.({ id: idRegistro }, { dataHoraRegistro, tipo });
+        }
+      }
+      onClose();
     } finally {
       setIsSalvandoApontamentos(false);
     }
@@ -93,7 +113,7 @@ export default function ModalEditarPonto({
   async function lancarJustificativa() {
     setIsLancandoJustificativa(true);
     try {
-      await onLancarJustificativa?.({ registroId: registro.id, ...justificativa });
+      await onLancarJustificativa?.({ registroId: registro?.idEntrada1, ...justificativa });
     } finally {
       setIsLancandoJustificativa(false);
     }
@@ -247,8 +267,8 @@ export default function ModalEditarPonto({
           <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#222", marginBottom: "20px" }}>
             Justificativa de ausência
           </h2>
- 
 
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {/* QUANTIDADE DE HORAS */}
             <div>
               <p style={{ fontSize: "13px", color: "#5a6a55", fontWeight: 600, marginBottom: "8px" }}>
@@ -347,5 +367,6 @@ export default function ModalEditarPonto({
           </div>
         </div>
       </div>
+    </div>
   );
 }

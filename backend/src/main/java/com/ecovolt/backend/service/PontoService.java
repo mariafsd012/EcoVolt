@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PontoService {
+
+    private static final ZoneId FUSO = ZoneId.of("America/Fortaleza");
 
     private final RegistroPontoRepository registroPontoRepository;
     private final ColaboradorRepository colaboradorRepository;
@@ -45,8 +48,8 @@ public class PontoService {
         Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
 
-        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
-        LocalDateTime fimDia = LocalDate.now().atTime(23, 59, 59);
+        LocalDateTime inicioDia = LocalDate.now(FUSO).atStartOfDay();
+        LocalDateTime fimDia = LocalDate.now(FUSO).atTime(23, 59, 59);
 
         List<RegistroPonto> registrosHoje = registroPontoRepository
                 .findByColaboradorIdAndDataHoraRegistroBetweenOrderByDataHoraRegistroAsc(colaboradorId, inicioDia, fimDia);
@@ -57,13 +60,21 @@ public class PontoService {
 
         RegistroPonto registro = new RegistroPonto();
         registro.setColaborador(colaborador);
-        registro.setDataHoraRegistro(LocalDateTime.now());
+        registro.setDataHoraRegistro(LocalDateTime.now(FUSO));
         registro.setTipo(registrosHoje.size() % 2 == 0 ? RegistroPonto.TipoPonto.ENTRADA : RegistroPonto.TipoPonto.SAIDA);
 
         return registroPontoRepository.save(registro);
     }
 
     public List<HistoricoPontoDTO> buscarHistoricoAgrupado(Long colaboradorId) {
+        Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
+                .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
+
+        Escala escala = colaborador.getEscala();
+        Duration cargaDiaria = (escala != null)
+                ? Duration.between(escala.getHoraInicio(), escala.getHoraFim())
+                : Duration.ofHours(8);
+
         List<RegistroPonto> registros = registroPontoRepository.findByColaboradorIdOrderByDataHoraRegistroAsc(colaboradorId);
 
         Map<LocalDate, List<RegistroPonto>> agrupados = registros.stream()
@@ -74,10 +85,33 @@ public class PontoService {
             HistoricoPontoDTO dto = new HistoricoPontoDTO();
             dto.setData(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-            if (doDia.size() > 0) dto.setEntrada1(formatarHora(doDia.get(0)));
-            if (doDia.size() > 1) dto.setSaida1(formatarHora(doDia.get(1)));
-            if (doDia.size() > 2) dto.setEntrada2(formatarHora(doDia.get(2)));
-            if (doDia.size() > 3) dto.setSaida2(formatarHora(doDia.get(3)));
+            if (doDia.size() > 0) { dto.setIdEntrada1(doDia.get(0).getId()); dto.setEntrada1(formatarHora(doDia.get(0))); }
+            if (doDia.size() > 1) { dto.setIdSaida1(doDia.get(1).getId()); dto.setSaida1(formatarHora(doDia.get(1))); }
+            if (doDia.size() > 2) { dto.setIdEntrada2(doDia.get(2).getId()); dto.setEntrada2(formatarHora(doDia.get(2))); }
+            if (doDia.size() > 3) { dto.setIdSaida2(doDia.get(3).getId()); dto.setSaida2(formatarHora(doDia.get(3))); }
+
+            // Calcula HT (horas trabalhadas) somando pares entrada->saída
+            Duration totalTrabalhado = Duration.ZERO;
+            for (int i = 0; i + 1 < doDia.size(); i += 2) {
+                RegistroPonto entrada = doDia.get(i);
+                RegistroPonto saida = doDia.get(i + 1);
+                if (entrada.getTipo() == RegistroPonto.TipoPonto.ENTRADA
+                        && saida.getTipo() == RegistroPonto.TipoPonto.SAIDA) {
+                    totalTrabalhado = totalTrabalhado.plus(
+                            Duration.between(entrada.getDataHoraRegistro(), saida.getDataHoraRegistro()));
+                }
+            }
+
+            if (!totalTrabalhado.isZero()) {
+                dto.setHt(formatarDuracao(totalTrabalhado));
+                if (totalTrabalhado.compareTo(cargaDiaria) > 0) {
+                    dto.setHe(formatarDuracao(totalTrabalhado.minus(cargaDiaria)));
+                    dto.setHr("0h00min");
+                } else {
+                    dto.setHr(formatarDuracao(cargaDiaria.minus(totalTrabalhado)));
+                    dto.setHe("0h00min");
+                }
+            }
 
             return dto;
         }).sorted(Comparator.comparing(HistoricoPontoDTO::getData).reversed()).collect(Collectors.toList());
@@ -87,7 +121,7 @@ public class PontoService {
         Colaborador colaborador = colaboradorRepository.findById(colaboradorId)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
 
-        Map<String, Object> bancoHoras = calcularBancoHoras(colaboradorId, LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+        Map<String, Object> bancoHoras = calcularBancoHoras(colaboradorId, LocalDate.now(FUSO).getMonthValue(), LocalDate.now(FUSO).getYear());
         Map<String, Object> dashboard = new HashMap<>(bancoHoras);
         dashboard.put("colaborador", Map.of(
                 "id", colaborador.getId(),
