@@ -6,6 +6,7 @@ import CadastrarEquipamento from "../components/CadastrarEquipamento";
 import FiltroEquipamentos from "../components/FiltroEquipamentos";
 import TabelaEquipamentos from "../components/TabelaEquipamentos";
 import ModalEditarEquipamento from "../components/ModalEditarEquipamento";
+
 import { useTI } from "../hooks/useTI";
 
 export default function TIPage() {
