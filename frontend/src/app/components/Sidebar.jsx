@@ -8,6 +8,7 @@ import {
   UserRound, Clock, Users, LogOut,
   Home, Monitor, Truck, ShieldCheck, Headphones,
   ClockArrowUp, FileText, Palmtree, BarChart2, PlusCircle,
+  MapPin, GraduationCap, Handshake,
 } from "lucide-react";
 
 const subMenus = {
@@ -17,6 +18,11 @@ const subMenus = {
     { href: "/ponto/justificativa", icon: FileText, label: "Justificativas" },
     { href: "/ponto/ferias-folgas", icon: Palmtree, label: "Férias e Folgas" },
     { href: "/ponto/relatorio", icon: BarChart2, label: "Relatório" },
+  ],
+  "/ehs": [
+    { href: "/ehs/campo", icon: MapPin, label: "Campo" },
+    { href: "/ehs/treinamentos", icon: GraduationCap, label: "Treinamentos" },
+    { href: "/ehs/equipes", icon: Handshake, label: "Equipes" }
   ],
 };
 
@@ -59,7 +65,12 @@ export default function Sidebar() {
   const activeSectionLabel = menuItems.find((m) => m.href === activeSection)?.label;
 
   const filteredSubItems = subItems.filter((item) => {
-    if (item.href === "/ponto/controle" || item.href === "/ponto/justificativa" || item.href === "/ponto/ferias-folgas" || item.href === "/ponto/relatorio") {
+    if (
+      item.href === "/ponto/controle" ||
+      item.href === "/ponto/justificativa" ||
+      item.href === "/ponto/ferias-folgas" ||
+      item.href === "/ponto/relatorio"
+    ) {
       return isAnalistaPonto;
     }
     return true;
@@ -131,7 +142,7 @@ export default function Sidebar() {
 
         <nav className="flex-1 flex flex-col items-center pt-8 gap-3">
           {filteredSubItems.map(({ href, icon: Icon, label }) => {
-            const active = pathname === href;
+            const active = pathname === href || pathname.startsWith(href + "/");
             const isActionItem = href === "/ponto/registrar";
 
             return (
