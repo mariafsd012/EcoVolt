@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import {
   UserRound, Clock, Users, LogOut,
   Home, Monitor, Truck, ShieldCheck, Headphones,
-  ClockArrowUp, FileText, Palmtree, BarChart2, PlusCircle,
-  MapPin, GraduationCap, Handshake,
+  ClockArrowUp, FileText, Palmtree, PlusCircle,
+  MapPin, GraduationCap, Handshake, ClipboardList,
 } from "lucide-react";
 
 const subMenus = {
@@ -16,9 +16,7 @@ const subMenus = {
     { href: "/ponto/registrar", icon: PlusCircle, label: "Registrar Ponto" },
     { href: "/ponto/controle", icon: ClockArrowUp, label: "Controle de Ponto" },
     { href: "/ponto/justificativa", icon: FileText, label: "Justificativas" },
-    { href: "/ponto/ferias-folgas", icon: Palmtree, label: "Férias e Folgas" },
-    { href: "/ponto/relatorio", icon: BarChart2, label: "Relatório" },
-  ],
+    { href: "/ponto/ferias-folgas", icon: Palmtree, label: "Férias e Folgas" },],
   "/ehs": [
     { href: "/ehs/campo", icon: MapPin, label: "Campo" },
     { href: "/ehs/treinamentos", icon: GraduationCap, label: "Treinamentos" },
@@ -34,6 +32,7 @@ const menuItems = [
   { href: "/ti", icon: Monitor, label: "T.I" },
   { href: "/logistica", icon: Truck, label: "Logística" },
   { href: "/ehs", icon: ShieldCheck, label: "EHS" },
+  { href: "/relatorios", icon: ClipboardList , label: "Relatórios" },
   { href: "/suporte", icon: Headphones, label: "Suporte" },
 ];
 
