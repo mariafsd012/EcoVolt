@@ -18,9 +18,9 @@ export const suporteService = {
   async abrirChamado(chamado, options = {}) {
     const token = localStorage.getItem("token");
     const payload = {
-      tipo: TIPO_MAP[chamado.tipo] ?? "SUPORTE_TI",
-      descricao: chamado.detalhamento,
-    };
+  tipo: chamado.tipo, // já vem como enum do backend
+  descricao: chamado.detalhamento,
+};
     return apiClient.post(`/api/chamados/abrir`, payload, {
       ...options,
       headers: {
