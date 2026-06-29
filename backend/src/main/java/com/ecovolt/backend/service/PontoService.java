@@ -85,10 +85,10 @@ public class PontoService {
             HistoricoPontoDTO dto = new HistoricoPontoDTO();
             dto.setData(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-            if (doDia.size() > 0) dto.setEntrada1(formatarHora(doDia.get(0)));
-            if (doDia.size() > 1) dto.setSaida1(formatarHora(doDia.get(1)));
-            if (doDia.size() > 2) dto.setEntrada2(formatarHora(doDia.get(2)));
-            if (doDia.size() > 3) dto.setSaida2(formatarHora(doDia.get(3)));
+            if (doDia.size() > 0) { dto.setIdEntrada1(doDia.get(0).getId()); dto.setEntrada1(formatarHora(doDia.get(0))); }
+            if (doDia.size() > 1) { dto.setIdSaida1(doDia.get(1).getId()); dto.setSaida1(formatarHora(doDia.get(1))); }
+            if (doDia.size() > 2) { dto.setIdEntrada2(doDia.get(2).getId()); dto.setEntrada2(formatarHora(doDia.get(2))); }
+            if (doDia.size() > 3) { dto.setIdSaida2(doDia.get(3).getId()); dto.setSaida2(formatarHora(doDia.get(3))); }
 
             // Calcula HT (horas trabalhadas) somando pares entrada->saída
             Duration totalTrabalhado = Duration.ZERO;
@@ -102,10 +102,8 @@ public class PontoService {
                 }
             }
 
-            // Só preenche HT/HR/HE se houver ao menos um par completo
             if (!totalTrabalhado.isZero()) {
                 dto.setHt(formatarDuracao(totalTrabalhado));
-
                 if (totalTrabalhado.compareTo(cargaDiaria) > 0) {
                     dto.setHe(formatarDuracao(totalTrabalhado.minus(cargaDiaria)));
                     dto.setHr("0h00min");
