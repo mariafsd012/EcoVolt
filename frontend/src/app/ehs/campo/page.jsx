@@ -1,6 +1,7 @@
 "use client";
 
-import Sidebar from "@/app/components/Sidebar";
+import Sidebar from "../../components/Sidebar";
+import { useCampo } from "../../hooks/useCampo";
 import {
   MapPin,
   CalendarDays,
@@ -12,6 +13,28 @@ import {
 } from "lucide-react";
 
 export default function CampoPage() {
+  const {
+  alocacaoAtual,
+  treinamentosRealizados,
+  treinamentosPendentes,
+  ultimasAlocacoes,
+  loading,
+  error,
+} = useCampo();
+if (loading) {
+  return (
+    <div className="flex h-screen items-center justify-center">
+      Carregando...
+    </div>
+  );
+}
+if (error) {
+  return (
+    <div className="flex h-screen items-center justify-center text-red-500">
+      {error}
+    </div>
+  );
+}
   return (
     <div className="flex h-screen bg-[#f4f6f0]">
       <Sidebar />
@@ -48,21 +71,23 @@ export default function CampoPage() {
                   <Factory size={20} className="text-[#4a7a3a]" />
                 </div>
                 <div>
-                  <p className="text-[17px] font-medium text-[#2d4a27]">{alocacaoAtual.nome}</p>
-                  <p className="text-sm text-[#7a9470] mt-0.5">{alocacaoAtual.sublocal}</p>
+                  <p className="text-[17px] font-medium text-[#2d4a27]">
+  {alocacaoAtual?.nome}
+</p>
+                  <p className="text-sm text-[#7a9470] mt-0.5">{alocacaoAtual?.sublocal}</p>
                 </div>
               </div>
               <span className="flex items-center gap-1.5 bg-[#eaf2e3] text-[#3d6e2d] text-xs font-medium px-3 py-1 rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#4a9a3a]" />
-                {alocacaoAtual.status}
+                {alocacaoAtual?.status}
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <InfoBox icon={<MapPin size={13} />} label="Localização" value={alocacaoAtual.localizacao} />
-              <InfoBox icon={<CalendarDays size={13} />} label="Período" value={alocacaoAtual.periodo} />
-              <InfoBox icon={<Users size={13} />} label="Equipe" value={alocacaoAtual.equipe} />
-              <InfoBox icon={<Wrench size={13} />} label="Atividade" value={alocacaoAtual.atividade} />
+              <InfoBox icon={<MapPin size={13} />} label="Localização" value={alocacaoAtual?.localizacao} />
+              <InfoBox icon={<CalendarDays size={13} />} label="Período" value={alocacaoAtual?.periodo} />
+              <InfoBox icon={<Users size={13} />} label="Equipe" value={alocacaoAtual?.equipe} />
+              <InfoBox icon={<Wrench size={13} />} label="Atividade" value={alocacaoAtual?.atividade} />
             </div>
           </section>
 
@@ -82,7 +107,7 @@ export default function CampoPage() {
                   </span>
                 </div>
                 <div className="flex flex-col gap-2">
-                  {treinamentosRealizados.map((t) => (
+                  {(treinamentosRealizados || []).map((t) => (
                     <div
                       key={t.nome}
                       className="flex items-center gap-2.5 bg-[#f7faf4] border border-[#dde5d8] rounded-xl px-3.5 py-2.5"
@@ -106,7 +131,7 @@ export default function CampoPage() {
                   </span>
                 </div>
                 <div className="flex flex-col gap-2">
-                  {treinamentosPendentes.map((t) => (
+                  {(treinamentosPendentes || []).map((t) => (
                     <div
                       key={t.nome}
                       className="flex items-center gap-2.5 bg-[#fffbf2] border border-[#f0d898] rounded-xl px-3.5 py-2.5"
@@ -129,7 +154,7 @@ export default function CampoPage() {
               Últimas alocações
             </p>
             <div className="flex flex-col gap-2">
-              {ultimasAlocacoes.map((a) => (
+              {(ultimasAlocacoes || []).map((a) => (
                 <div
                   key={a.nome}
                   className="flex items-center justify-between bg-[#f7faf4] border border-[#dde5d8] rounded-xl px-4 py-3"

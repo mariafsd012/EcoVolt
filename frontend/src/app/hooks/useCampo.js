@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ehsService } from "../campo/ehsService";
+import { ehsService } from "../ehs/campo/ehsService";
 
 export function useCampo() {
   const [alocacaoAtual, setAlocacaoAtual] = useState(null);

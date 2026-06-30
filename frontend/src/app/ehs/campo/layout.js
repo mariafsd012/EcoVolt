@@ -1,4 +1,4 @@
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../../components/Sidebar";
 import { Heebo } from "next/font/google";
 
 const heebo = Heebo({
