@@ -96,7 +96,7 @@ export default function Sidebar() {
   });
 
   return (
-    <div className="flex h-screen bg-[#f8faf7]">
+    <>
       <aside className="
         group w-[82px] hover:w-[210px] h-screen bg-white border-r border-[#e8ede4]
         shadow-[2px_0_16px_rgba(60,90,50,0.04)] transition-all duration-300
@@ -191,6 +191,6 @@ export default function Sidebar() {
           })}
         </nav>
       </aside>
-    </div>
+    </>
   );
 }
