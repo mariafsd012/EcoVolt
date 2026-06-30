@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import {
   UserRound, Clock, Users, LogOut,
   Home, Monitor, Truck, ShieldCheck, Headphones,
+
   ClockArrowUp, FileText, Palmtree, PlusCircle,
   MapPin, GraduationCap, Handshake, ClipboardList,
 } from "lucide-react";
@@ -21,6 +22,10 @@ const subMenus = {
     { href: "/ehs/campo", icon: MapPin, label: "Campo" },
     { href: "/ehs/treinamentos", icon: GraduationCap, label: "Treinamentos" },
     { href: "/ehs/equipes", icon: Handshake, label: "Equipes" }
+  ],
+  "/logistica": [
+    { href: "/logistica/frota", icon: Truck, label: "Frota" },
+    { href: "/logistica/estoque", icon: Package, label: "Estoque" },
   ],
 };
 
@@ -141,7 +146,9 @@ export default function Sidebar() {
 
         <nav className="flex-1 flex flex-col items-center pt-8 gap-3">
           {filteredSubItems.map(({ href, icon: Icon, label }) => {
+
             const active = pathname === href || pathname.startsWith(href + "/");
+
             const isActionItem = href === "/ponto/registrar";
 
             return (
