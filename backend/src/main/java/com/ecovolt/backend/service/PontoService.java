@@ -166,38 +166,40 @@ public class PontoService {
         LocalDateTime fim = yearMonth.atEndOfMonth().atTime(23, 59, 59);
 
         List<RegistroPonto> registros = registroPontoRepository
-                .findByColaboradorIdAndDataHoraRegistroBetween(colaboradorId, inicio, fim);
+                .findByColaboradorIdAndDataHoraRegistroBetweenOrderByDataHoraRegistroAsc(colaboradorId, inicio, fim);
 
         Duration totalTrabalhado = Duration.ZERO;
-        Duration totalExtras = Duration.ZERO;
-        Duration totalFaltantes = Duration.ZERO;
-
         LocalDateTime entradaDia = null;
 
         for (RegistroPonto registro : registros) {
             if (registro.getTipo() == RegistroPonto.TipoPonto.ENTRADA) {
                 entradaDia = registro.getDataHoraRegistro();
             } else if (registro.getTipo() == RegistroPonto.TipoPonto.SAIDA && entradaDia != null) {
-                Duration trabalhado = Duration.between(entradaDia, registro.getDataHoraRegistro());
-                totalTrabalhado = totalTrabalhado.plus(trabalhado);
-
-                if (trabalhado.compareTo(cargaDiaria) > 0) {
-                    totalExtras = totalExtras.plus(trabalhado.minus(cargaDiaria));
-                } else if (trabalhado.compareTo(cargaDiaria) < 0) {
-                    totalFaltantes = totalFaltantes.plus(cargaDiaria.minus(trabalhado));
-                }
-
+                totalTrabalhado = totalTrabalhado.plus(
+                    Duration.between(entradaDia, registro.getDataHoraRegistro()));
                 entradaDia = null;
             }
         }
+
+        // Calcula carga mensal com base nos dias que tiveram ao menos um registro
+        long diasTrabalhados = registros.stream()
+                .map(r -> r.getDataHoraRegistro().toLocalDate())
+                .distinct()
+                .count();
+
+        Duration cargaMensal = cargaDiaria.multipliedBy(diasTrabalhados);
+        Duration saldo = totalTrabalhado.minus(cargaMensal);
+
+        Duration horasExtras = saldo.isNegative() ? Duration.ZERO : saldo;
+        Duration horasFaltantes = saldo.isNegative() ? saldo.negated() : Duration.ZERO;
 
         Map<String, Object> resultado = new HashMap<>();
         resultado.put("colaboradorId", colaboradorId);
         resultado.put("mes", mes);
         resultado.put("ano", ano);
         resultado.put("horasTotais", formatarDuracao(totalTrabalhado));
-        resultado.put("horasExtras", formatarDuracao(totalExtras));
-        resultado.put("horasFaltantes", formatarDuracao(totalFaltantes));
+        resultado.put("horasExtras", formatarDuracao(horasExtras));
+        resultado.put("horasFaltantes", formatarDuracao(horasFaltantes));
 
         return resultado;
     }

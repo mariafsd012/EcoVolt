@@ -26,7 +26,7 @@ export default function Dashboard() {
   if (loading) return <div className={styles.dash}>Carregando...</div>;
   if (error) return <div className={styles.dash}>Erro: {error}</div>;
 
-  const { colaborador, horasTotais, bancoHorasExtras, bancoHorasFaltantes, desempenho } = dashboard;
+  const { colaborador, horasTotais, horasExtras, horasFaltantes, desempenho } = dashboard;
   const notaFinal = desempenho?.notaFinal ?? 0;
 
   function getDesempenhoLabel(score) {
@@ -69,11 +69,11 @@ export default function Dashboard() {
             </div>
             <div className={styles.horasCard}>
               <div className={styles.horasLabel}>HE</div>
-              <div className={styles.horasValor} style={{ color: '#16a34a' }}>{bancoHorasExtras || 0}h</div>
+              <div className={styles.horasValor} style={{ color: '#16a34a' }}>{horasExtras || "0h"}</div>
             </div>
             <div className={styles.horasCard}>
               <div className={styles.horasLabel}>HF</div>
-              <div className={styles.horasValor} style={{ color: '#dc2626' }}>{bancoHorasFaltantes || 0}h</div>
+              <div className={styles.horasValor} style={{ color: '#dc2626' }}>{horasFaltantes || "0h"}</div>
             </div>
           </div>
         </section>

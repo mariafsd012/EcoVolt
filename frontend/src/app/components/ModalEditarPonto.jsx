@@ -84,7 +84,6 @@ export default function ModalEditarPonto({
   // Converte "HH:mm" + data do registro para LocalDateTime no formato ISO
   function montarDataHora(hora) {
     if (!hora || !registro?.data) return null;
-    // registro.data vem como "dd/MM/yyyy"
     const [dia, mes, ano] = registro.data.split("/");
     return `${ano}-${mes}-${dia}T${hora}:00`;
   }
@@ -92,19 +91,36 @@ export default function ModalEditarPonto({
   async function salvarApontamentos() {
     setIsSalvandoApontamentos(true);
     try {
-      // Envia um PUT por registro que foi alterado
+      // Verifica quais campos foram alterados
+      const camposAlterados = [];
+      
       for (const linha of linhasApontamento) {
-        const idRegistro = registro?.[linha.idChave];
         const horaAtual = apontamentos[linha.chave];
         const horaOriginal = registro?.[linha.chave] ?? "";
-
+        const idRegistro = registro?.[linha.idChave];
+        
         if (idRegistro && horaAtual && horaAtual !== horaOriginal) {
-          const dataHoraRegistro = montarDataHora(horaAtual);
-          const tipo = linha.tipo === "entrada" ? "ENTRADA" : "SAIDA";
-          await onSalvarApontamentos?.({ id: idRegistro }, { dataHoraRegistro, tipo });
+          camposAlterados.push({
+            id: idRegistro,
+            chave: linha.chave,
+            valor: horaAtual,
+            tipo: linha.tipo === "entrada" ? "ENTRADA" : "SAIDA"
+          });
         }
       }
+
+      // Salva cada campo alterado individualmente
+      for (const campo of camposAlterados) {
+        const dataHoraRegistro = montarDataHora(campo.valor);
+        await onSalvarApontamentos?.(
+          { id: campo.id }, 
+          { dataHoraRegistro, tipo: campo.tipo }
+        );
+      }
+      
       onClose();
+    } catch (error) {
+      console.error("Erro ao salvar apontamentos:", error);
     } finally {
       setIsSalvandoApontamentos(false);
     }
@@ -113,7 +129,13 @@ export default function ModalEditarPonto({
   async function lancarJustificativa() {
     setIsLancandoJustificativa(true);
     try {
-      await onLancarJustificativa?.({ registroId: registro?.idEntrada1, ...justificativa });
+      await onLancarJustificativa?.({ 
+        registroId: registro?.id, 
+        ...justificativa 
+      });
+      onClose();
+    } catch (error) {
+      console.error("Erro ao lançar justificativa:", error);
     } finally {
       setIsLancandoJustificativa(false);
     }
