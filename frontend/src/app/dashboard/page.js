@@ -30,9 +30,9 @@ export default function Dashboard() {
   const notaFinal = desempenho?.notaFinal ?? 0;
 
   function getDesempenhoLabel(score) {
-    if (score >= 70) return "Bom";
-    if (score >= 50) return "Médio";
-    return "Ruim";
+    if (score >= 70) return "";
+    if (score >= 50) return "";
+    return "";
   }
 
   function getDesempenhoClass(score) {
