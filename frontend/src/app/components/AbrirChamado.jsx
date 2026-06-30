@@ -23,12 +23,12 @@ const campoStyle = {
 export default function AbrirChamado({
   chamado = { tipo: "", detalhamento: "" },
   tiposChamado = [
-  { value: "JUSTIFICATIVA_FALTA", label: "Justificativa de Falta" },
-  { value: "SUPORTE_TI", label: "Suporte T.I" },
-  { value: "AJUSTE_PONTO", label: "Ajuste de Ponto" },
-  { value: "ERRO_BENEFICIO", label: "Erro de Benefício" },
-  { value: "ERRO_SALARIO", label: "Erro de Salário" },
-],
+    { value: "justificar_falta", label: "Justificar falta" },
+    { value: "ajuste_ponto", label: "Ajuste de ponto" },
+    { value: "erro_salarial", label: "Erro salarial" },
+    { value: "erro_beneficio", label: "Erro no benefício" },
+    { value: "outros", label: "Outros" },
+  ],
   onChangeCampo,
   onAbrirChamado,
   isSubmitting = false,
