@@ -46,7 +46,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [activeSection, setActiveSection] = useState(null);
-  const [isAnalistaPonto, setIsAnalistaPonto] = useState(false);
+  const [hasCampoAccess, setHasCampoAccess] = useState(false);
 
   useEffect(() => {
     const parentPath = Object.keys(subMenus).find((key) => pathname.startsWith(key));
@@ -55,7 +55,9 @@ export default function Sidebar() {
 
   useEffect(() => {
     const papel = window.localStorage.getItem("papel") || "";
-    setIsAnalistaPonto(papel === "ROLE_ANALISTA_PONTO");
+    setHasCampoAccess(
+      papel === "ROLE_ANALISTA_PONTO" || papel === "ROLE_ACESSO_CAMPO"
+    );
   }, []);
 
   const handleItemClick = (href) => {
@@ -76,7 +78,7 @@ export default function Sidebar() {
       item.href === "/ponto/ferias-folgas" ||
       item.href === "/ponto/relatorio"
     ) {
-      return isAnalistaPonto;
+      return hasCampoAccess;
     }
     return true;
   });

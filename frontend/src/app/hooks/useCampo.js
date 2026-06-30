@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ehsService } from "../ehs/campo/ehsService";
+import { campoService } from "../ehs/campo/campoService";
 
 export function useCampo() {
   const [alocacaoAtual, setAlocacaoAtual] = useState(null);
@@ -9,31 +9,35 @@ export function useCampo() {
   const [treinamentosPendentes, setTreinamentosPendentes] = useState([]);
   const [ultimasAlocacoes, setUltimasAlocacoes] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isLoadingAlocacao, setIsLoadingAlocacao] = useState(true);
+  const [isLoadingTreinamentos, setIsLoadingTreinamentos] = useState(true);
+  const [isLoadingHistorico, setIsLoadingHistorico] = useState(true);
+
+  const [erroAlocacao, setErroAlocacao] = useState(null);
+  const [erroTreinamentos, setErroTreinamentos] = useState(null);
+  const [erroHistorico, setErroHistorico] = useState(null);
 
   useEffect(() => {
-    async function fetchDados() {
-      try {
-        const [alocacao, realizados, pendentes, historico] = await Promise.all([
-          ehsService.buscarAlocacaoAtual(),
-          ehsService.listarTreinamentosRealizados(),
-          ehsService.listarTreinamentosPendentes(),
-          ehsService.listarUltimasAlocacoes({ limite: 3 }),
-        ]);
+    campoService
+      .buscarAlocacaoAtual()
+      .then((data) => setAlocacaoAtual(data ?? null))
+      .catch((err) => setErroAlocacao(err))
+      .finally(() => setIsLoadingAlocacao(false));
 
-        setAlocacaoAtual(alocacao);
-        setTreinamentosRealizados(realizados);
-        setTreinamentosPendentes(pendentes);
-        setUltimasAlocacoes(historico);
-      } catch (err) {
-        setError(err?.message || "Não foi possível carregar os dados.");
-      } finally {
-        setLoading(false);
-      }
-    }
+    campoService
+      .listarTreinamentos()
+      .then((data) => {
+        setTreinamentosRealizados(data?.realizados ?? []);
+        setTreinamentosPendentes(data?.pendentes ?? []);
+      })
+      .catch((err) => setErroTreinamentos(err))
+      .finally(() => setIsLoadingTreinamentos(false));
 
-    fetchDados();
+    campoService
+      .listarUltimasAlocacoes()
+      .then((data) => setUltimasAlocacoes(data?.alocacoes ?? data ?? []))
+      .catch((err) => setErroHistorico(err))
+      .finally(() => setIsLoadingHistorico(false));
   }, []);
 
   return {
@@ -41,7 +45,11 @@ export function useCampo() {
     treinamentosRealizados,
     treinamentosPendentes,
     ultimasAlocacoes,
-    loading,
-    error,
+    isLoadingAlocacao,
+    isLoadingTreinamentos,
+    isLoadingHistorico,
+    erroAlocacao,
+    erroTreinamentos,
+    erroHistorico,
   };
 }
