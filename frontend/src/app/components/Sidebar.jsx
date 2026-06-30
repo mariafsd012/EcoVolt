@@ -9,6 +9,7 @@ import {
   Home, Monitor, Truck, ShieldCheck, Headphones,
   ClockArrowUp, FileText, Palmtree, BarChart2, PlusCircle,
   MapPin, GraduationCap, Handshake, ClipboardList, Package,
+  Gift, Target,
 } from "lucide-react";
 
 const subMenus = {
@@ -17,6 +18,10 @@ const subMenus = {
     { href: "/ponto/controle", icon: ClockArrowUp, label: "Controle de Ponto" },
     { href: "/ponto/justificativa", icon: FileText, label: "Justificativas" },
     { href: "/ponto/ferias-folgas", icon: Palmtree, label: "Férias e Folgas" },],
+  "/dho": [
+    { href: "/dho", icon: Users, label: "Benefícios e Desempenho" },
+    { href: "/dho/meu-rh", icon: UserRound, label: "Meu RH" },
+  ],
   "/ehs": [
     { href: "/ehs/campo", icon: MapPin, label: "Campo" },
     { href: "/ehs/treinamentos", icon: GraduationCap, label: "Treinamentos" },
@@ -82,6 +87,12 @@ export default function Sidebar() {
 
   const subItems = activeSection ? subMenus[activeSection] : [];
   const activeSectionLabel = menuItems.find((m) => m.href === activeSection)?.label;
+
+  // Entre os itens do submenu que "batem" com o pathname atual,
+  // só o href mais específico (mais longo) deve ficar marcado como ativo.
+  const activeSubHref = subItems
+    .filter((item) => pathname === item.href || pathname.startsWith(item.href + "/"))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href ?? null;
 
   const filteredSubItems = subItems.filter((item) => {
     if (
@@ -161,7 +172,7 @@ export default function Sidebar() {
 
         <nav className="flex-1 flex flex-col items-center pt-8 gap-3">
           {filteredSubItems.map(({ href, icon: Icon, label }) => {
-            const active = pathname === href || pathname.startsWith(href + "/");
+            const active = href === activeSubHref;
             const isActionItem = href === "/ponto/registrar";
 
             return (
