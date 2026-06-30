@@ -7,6 +7,7 @@ import com.ecovolt.backend.repository.*;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChamadoService {
@@ -122,5 +123,39 @@ public class ChamadoService {
 
     public List<Chamado> listarPorColaborador(Long colaboradorId) {
         return chamadoRepository.findByColaboradorId(colaboradorId);
+    }
+
+    /**
+     * Lista chamados de justificativa/ajuste de ponto, com filtros opcionais
+     * de nome de colaborador e tipo de chamado. Usado na tela de justificativas
+     * do analista de ponto.
+     */
+    public List<Chamado> listarJustificativas(String nomeColaborador, String tipo) {
+        List<Chamado> chamados = chamadoRepository.findAll().stream()
+                .filter(c -> c.getTipo() == Chamado.TipoChamado.JUSTIFICATIVA_FALTA
+                          || c.getTipo() == Chamado.TipoChamado.AJUSTE_PONTO)
+                .collect(Collectors.toList());
+
+        if (nomeColaborador != null && !nomeColaborador.isEmpty()) {
+            String filtro = nomeColaborador.toLowerCase();
+            chamados = chamados.stream()
+                    .filter(c -> c.getColaborador() != null
+                              && c.getColaborador().getNome() != null
+                              && c.getColaborador().getNome().toLowerCase().contains(filtro))
+                    .collect(Collectors.toList());
+        }
+
+        if (tipo != null && !tipo.isEmpty()) {
+            try {
+                Chamado.TipoChamado tipoEnum = Chamado.TipoChamado.valueOf(tipo.toUpperCase());
+                chamados = chamados.stream()
+                        .filter(c -> c.getTipo() == tipoEnum)
+                        .collect(Collectors.toList());
+            } catch (IllegalArgumentException ignored) {
+                // tipo inválido informado: ignora o filtro
+            }
+        }
+
+        return chamados;
     }
 }

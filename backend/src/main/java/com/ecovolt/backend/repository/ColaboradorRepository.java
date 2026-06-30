@@ -14,10 +14,10 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     
     // Métodos para filtragem
     List<Colaborador> findByNomeContainingIgnoreCase(String nome);
-    List<Colaborador> findBySetor(String setor);
+    List<Colaborador> findBySetor(Colaborador.Setor setor);
     
     // MÉTODO NOVO: Necessário para o filtro combinado no Service
-    List<Colaborador> findByNomeContainingIgnoreCaseAndSetor(String nome, String setor);
+    List<Colaborador> findByNomeContainingIgnoreCaseAndSetor(String nome, Colaborador.Setor setor);
     
     List<Colaborador> findByEscalaId(Long escalaId);
 }

@@ -35,12 +35,25 @@ public class ColaboradorService {
      * O Controller chama este método.
      */
     public List<Colaborador> listarFiltrado(String nome, String setor) {
-        if (nome != null && !nome.isEmpty() && setor != null && !setor.isEmpty()) {
-            return colaboradorRepository.findByNomeContainingIgnoreCaseAndSetor(nome, setor);
-        } else if (nome != null && !nome.isEmpty()) {
+        Colaborador.Setor setorEnum = null;
+        if (setor != null && !setor.isEmpty()) {
+            try {
+                setorEnum = Colaborador.Setor.valueOf(setor.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Setor inválido informado: ignora o filtro de setor
+                setorEnum = null;
+            }
+        }
+
+        boolean temNome = nome != null && !nome.isEmpty();
+        boolean temSetor = setorEnum != null;
+
+        if (temNome && temSetor) {
+            return colaboradorRepository.findByNomeContainingIgnoreCaseAndSetor(nome, setorEnum);
+        } else if (temNome) {
             return colaboradorRepository.findByNomeContainingIgnoreCase(nome);
-        } else if (setor != null && !setor.isEmpty()) {
-            return colaboradorRepository.findBySetor(setor);
+        } else if (temSetor) {
+            return colaboradorRepository.findBySetor(setorEnum);
         }
         return colaboradorRepository.findAll();
     }
