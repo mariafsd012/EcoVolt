@@ -3,12 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import {
   UserRound, Clock, Users, LogOut,
   Home, Monitor, Truck, ShieldCheck, Headphones,
-  ClockArrowUp, FileText, Palmtree, PlusCircle,
-  MapPin, GraduationCap, Handshake, ClipboardList,
+  ClockArrowUp, FileText, Palmtree, BarChart2, PlusCircle,
+  MapPin, GraduationCap, Handshake, ClipboardList, Package,
 } from "lucide-react";
 
 const subMenus = {
@@ -21,6 +21,10 @@ const subMenus = {
     { href: "/ehs/campo", icon: MapPin, label: "Campo" },
     { href: "/ehs/treinamentos", icon: GraduationCap, label: "Treinamentos" },
     { href: "/ehs/equipes", icon: Handshake, label: "Equipes" }
+  ],
+  "/logistica": [
+    { href: "/logistica/frota", icon: Truck, label: "Frota" },
+    { href: "/logistica/estoque", icon: Package, label: "Estoque" },
   ],
 };
 
@@ -36,21 +40,37 @@ const menuItems = [
   { href: "/suporte", icon: Headphones, label: "Suporte" },
 ];
 
+function subscribeToPapel(callback) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getPapelSnapshot() {
+  return window.localStorage.getItem("papel") || "";
+}
+
+function getPapelServerSnapshot() {
+  return "";
+}
+
+function findParentPath(pathname) {
+  return Object.keys(subMenus).find((key) => pathname.startsWith(key)) || null;
+}
+
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState(null);
-  const [isAnalistaPonto, setIsAnalistaPonto] = useState(false);
 
-  useEffect(() => {
-    const parentPath = Object.keys(subMenus).find((key) => pathname.startsWith(key));
-    setActiveSection(parentPath || null);
-  }, [pathname]);
+  const [activeSection, setActiveSection] = useState(() => findParentPath(pathname));
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
-  useEffect(() => {
-    const papel = window.localStorage.getItem("papel") || "";
-    setIsAnalistaPonto(papel === "ROLE_ANALISTA_PONTO");
-  }, []);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setActiveSection(findParentPath(pathname));
+  }
+
+  const papel = useSyncExternalStore(subscribeToPapel, getPapelSnapshot, getPapelServerSnapshot);
+  const isAnalistaPonto = papel === "ROLE_ANALISTA_PONTO";
 
   const handleItemClick = (href) => {
     if (subMenus[href]) {
