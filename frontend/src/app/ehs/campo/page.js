@@ -2,6 +2,7 @@
 
 import CampoHeader from "../../components/CampoHeader";
 import AlocacaoAtual from "../../components/AlocacaoAtual";
+import MoradiaColaborador from "../../components/MoradiaColaborador";
 import TreinamentosCampo from "../../components/TreinamentosCampo";
 import UltimasAlocacoes from "../../components/UltimasAlocacoes";
 import { useCampo } from "../../hooks/useCampo";
@@ -12,8 +13,11 @@ export default function CampoPage() {
     treinamentosRealizados,
     treinamentosPendentes,
     ultimasAlocacoes,
+    moradia,
     isLoadingHistorico,
+    isLoadingMoradia,
     erroHistorico,
+    erroMoradia,
   } = useCampo();
 
   return (
@@ -24,6 +28,12 @@ export default function CampoPage() {
       <CampoHeader />
 
       <AlocacaoAtual alocacao={alocacaoAtual} />
+
+      <MoradiaColaborador
+        moradia={moradia}
+        isLoading={isLoadingMoradia}
+        erro={erroMoradia}
+      />
 
       <TreinamentosCampo
         realizados={treinamentosRealizados}

@@ -8,14 +8,17 @@ export function useCampo() {
   const [treinamentosRealizados, setTreinamentosRealizados] = useState([]);
   const [treinamentosPendentes, setTreinamentosPendentes] = useState([]);
   const [ultimasAlocacoes, setUltimasAlocacoes] = useState([]);
+  const [moradia, setMoradia] = useState(null);
 
   const [isLoadingAlocacao, setIsLoadingAlocacao] = useState(true);
   const [isLoadingTreinamentos, setIsLoadingTreinamentos] = useState(true);
   const [isLoadingHistorico, setIsLoadingHistorico] = useState(true);
+  const [isLoadingMoradia, setIsLoadingMoradia] = useState(true);
 
   const [erroAlocacao, setErroAlocacao] = useState(null);
   const [erroTreinamentos, setErroTreinamentos] = useState(null);
   const [erroHistorico, setErroHistorico] = useState(null);
+  const [erroMoradia, setErroMoradia] = useState(null);
 
   useEffect(() => {
     campoService
@@ -38,6 +41,12 @@ export function useCampo() {
       .then((data) => setUltimasAlocacoes(data?.alocacoes ?? data ?? []))
       .catch((err) => setErroHistorico(err))
       .finally(() => setIsLoadingHistorico(false));
+
+    campoService
+      .buscarMoradia()
+      .then((data) => setMoradia(data ?? null))
+      .catch((err) => setErroMoradia(err))
+      .finally(() => setIsLoadingMoradia(false));
   }, []);
 
   return {
@@ -45,11 +54,14 @@ export function useCampo() {
     treinamentosRealizados,
     treinamentosPendentes,
     ultimasAlocacoes,
+    moradia,
     isLoadingAlocacao,
     isLoadingTreinamentos,
     isLoadingHistorico,
+    isLoadingMoradia,
     erroAlocacao,
     erroTreinamentos,
     erroHistorico,
+    erroMoradia,
   };
 }
