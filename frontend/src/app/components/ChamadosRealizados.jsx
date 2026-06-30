@@ -84,7 +84,9 @@ export default function ChamadosRealizados({
             !erro &&
             chamados.map((chamado) => (
               <tr key={chamado.id} style={{ backgroundColor: "#dbe8d1" }}>
-                <td style={{ ...celulaStyle, borderRadius: "12px 0 0 12px" }}>{chamado.colaborador}</td>
+                <td style={{ ...celulaStyle, borderRadius: "12px 0 0 12px" }}>
+                  {chamado.colaborador?.nome ?? "—"}
+                </td>
                 <td style={celulaStyle}>{chamado.detalhamento}</td>
                 <td style={{ ...celulaStyle, textAlign: "right", borderRadius: "0 12px 12px 0" }}>
                   <div style={{ position: "relative", display: "inline-block", minWidth: "150px" }}>
