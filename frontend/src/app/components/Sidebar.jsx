@@ -1,12 +1,13 @@
 "use client";
 
+import { Truck, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   UserRound, Clock, Users, LogOut,
-  Home, Monitor, Truck, ShieldCheck, Headphones,
+  Home, Monitor, ShieldCheck, Headphones,
 
   ClockArrowUp, FileText, Palmtree, PlusCircle,
   MapPin, GraduationCap, Handshake, ClipboardList,

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usuarioService } from "../ponto/controle/usuarioService";
 
-export default function SuporteHeader() {
+export default function TIHeader() {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
@@ -16,10 +16,10 @@ export default function SuporteHeader() {
     >
       <div>
         <h1 style={{ fontSize: "26px", fontWeight: 700, color: "#222", lineHeight: 1.2 }}>
-          Chamado
+          T.I
         </h1>
         <p style={{ fontSize: "13px", color: "#8a9a85", marginTop: "4px" }}>
-          Gerencie as solicitações de suporte
+          Gerencie os equipamentos de T.I
         </p>
       </div>
 
