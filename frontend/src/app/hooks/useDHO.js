@@ -65,6 +65,9 @@ export function useDHO() {
   }, []);
 
   useEffect(() => {
+    // carregarBeneficios/carregarDesempenhos são funções async que buscam dados
+    // externos; o setState ocorre após o await, não de forma síncrona no efeito.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     carregarBeneficios();
     carregarDesempenhos();
   }, [carregarBeneficios, carregarDesempenhos]);

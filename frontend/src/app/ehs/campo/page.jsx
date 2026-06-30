@@ -18,8 +18,12 @@ export default function CampoPage() {
     treinamentosRealizados,
     treinamentosPendentes,
     ultimasAlocacoes,
-    loading,
-    error,
+    isLoadingAlocacao,
+    isLoadingTreinamentos,
+    isLoadingHistorico,
+    erroAlocacao,
+    erroTreinamentos,
+    erroHistorico,
   } = useCampo();
 
   return (
@@ -45,22 +49,24 @@ export default function CampoPage() {
 
         {/* Conteúdo */}
         <main className="flex-1 overflow-y-auto p-7 flex flex-col gap-5">
-          {loading && (
-            <div className="text-[#6a8a60] text-sm">Carregando...</div>
-          )}
+          {/* Alocação atual */}
+          <section className="bg-white rounded-2xl border border-[#dde5d8] p-5">
+            <p className="text-[10px] font-medium tracking-widest text-[#7a9470] uppercase mb-4">
+              Alocação atual
+            </p>
 
-          {!loading && error && (
-            <div className="text-red-500 text-sm">Erro: {error}</div>
-          )}
+            {isLoadingAlocacao && (
+              <div className="text-[#6a8a60] text-sm">Carregando...</div>
+            )}
 
-          {!loading && !error && (
-            <>
-              {/* Alocação atual */}
-              <section className="bg-white rounded-2xl border border-[#dde5d8] p-5">
-                <p className="text-[10px] font-medium tracking-widest text-[#7a9470] uppercase mb-4">
-                  Alocação atual
-                </p>
+            {!isLoadingAlocacao && erroAlocacao && (
+              <div className="text-red-500 text-sm">
+                Erro ao carregar alocação atual.
+              </div>
+            )}
 
+            {!isLoadingAlocacao && !erroAlocacao && (
+              <>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-xl bg-[#eaf2e3] flex items-center justify-center">
@@ -87,90 +93,115 @@ export default function CampoPage() {
                   <InfoBox icon={<Users size={13} />} label="Equipe" value={alocacaoAtual?.equipe || "—"} />
                   <InfoBox icon={<Wrench size={13} />} label="Atividade" value={alocacaoAtual?.atividade || "—"} />
                 </div>
-              </section>
+              </>
+            )}
+          </section>
 
-              {/* Treinamentos */}
-              <section className="bg-white rounded-2xl border border-[#dde5d8] p-5">
-                <p className="text-[10px] font-medium tracking-widest text-[#7a9470] uppercase mb-4">
-                  Treinamentos
-                </p>
+          {/* Treinamentos */}
+          <section className="bg-white rounded-2xl border border-[#dde5d8] p-5">
+            <p className="text-[10px] font-medium tracking-widest text-[#7a9470] uppercase mb-4">
+              Treinamentos
+            </p>
 
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Realizados */}
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-[#2d4a27]">Realizados</span>
-                      <span className="text-xs font-medium bg-[#eaf2e3] text-[#3d6e2d] px-2 py-0.5 rounded-full">
-                        {treinamentosRealizados.length}
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {treinamentosRealizados.map((t) => (
-                        <div
-                          key={t.id ?? t.nome}
-                          className="flex items-center gap-2.5 bg-[#f7faf4] border border-[#dde5d8] rounded-xl px-3.5 py-2.5"
-                        >
-                          <CheckCircle2 size={16} className="text-[#4a9a3a] flex-shrink-0" />
-                          <div>
-                            <p className="text-[13px] font-medium text-[#2d4a27]">{t.nome}</p>
-                            <p className="text-[11px] text-[#7a9470] mt-0.5">{t.validade}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+            {isLoadingTreinamentos && (
+              <div className="text-[#6a8a60] text-sm">Carregando...</div>
+            )}
+
+            {!isLoadingTreinamentos && erroTreinamentos && (
+              <div className="text-red-500 text-sm">
+                Erro ao carregar treinamentos.
+              </div>
+            )}
+
+            {!isLoadingTreinamentos && !erroTreinamentos && (
+              <div className="grid grid-cols-2 gap-4">
+                {/* Realizados */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-[#2d4a27]">Realizados</span>
+                    <span className="text-xs font-medium bg-[#eaf2e3] text-[#3d6e2d] px-2 py-0.5 rounded-full">
+                      {treinamentosRealizados.length}
+                    </span>
                   </div>
-
-                  {/* Pendentes */}
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-[#2d4a27]">Pendentes</span>
-                      <span className="text-xs font-medium bg-[#fff3d4] text-[#8a5e0a] px-2 py-0.5 rounded-full">
-                        {treinamentosPendentes.length}
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {treinamentosPendentes.map((t) => (
-                        <div
-                          key={t.id ?? t.nome}
-                          className="flex items-center gap-2.5 bg-[#fffbf2] border border-[#f0d898] rounded-xl px-3.5 py-2.5"
-                        >
-                          <ClockAlert size={16} className="text-[#c8860a] flex-shrink-0" />
-                          <div>
-                            <p className="text-[13px] font-medium text-[#6b4a08]">{t.nome}</p>
-                            <p className="text-[11px] text-[#c8860a] mt-0.5">{t.prazo}</p>
-                          </div>
+                  <div className="flex flex-col gap-2">
+                    {treinamentosRealizados.map((t) => (
+                      <div
+                        key={t.id ?? t.nome}
+                        className="flex items-center gap-2.5 bg-[#f7faf4] border border-[#dde5d8] rounded-xl px-3.5 py-2.5"
+                      >
+                        <CheckCircle2 size={16} className="text-[#4a9a3a] flex-shrink-0" />
+                        <div>
+                          <p className="text-[13px] font-medium text-[#2d4a27]">{t.nome}</p>
+                          <p className="text-[11px] text-[#7a9470] mt-0.5">{t.validade}</p>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Últimas alocações */}
-              <section className="bg-white rounded-2xl border border-[#dde5d8] p-5">
-                <p className="text-[10px] font-medium tracking-widest text-[#7a9470] uppercase mb-4">
-                  Últimas alocações
-                </p>
-                <div className="flex flex-col gap-2">
-                  {ultimasAlocacoes.map((a) => (
-                    <div
-                      key={a.id ?? a.nome}
-                      className="flex items-center justify-between bg-[#f7faf4] border border-[#dde5d8] rounded-xl px-4 py-3"
-                    >
-                      <div>
-                        <p className="text-[13px] font-medium text-[#2d4a27]">{a.nome}</p>
-                        <p className="flex items-center gap-1 text-xs text-[#7a9470] mt-0.5">
-                          <MapPin size={12} />
-                          {a.local}
-                        </p>
                       </div>
-                      <span className="text-xs text-[#7a9470] whitespace-nowrap ml-4">{a.periodo}</span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </section>
-            </>
-          )}
+
+                {/* Pendentes */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-[#2d4a27]">Pendentes</span>
+                    <span className="text-xs font-medium bg-[#fff3d4] text-[#8a5e0a] px-2 py-0.5 rounded-full">
+                      {treinamentosPendentes.length}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {treinamentosPendentes.map((t) => (
+                      <div
+                        key={t.id ?? t.nome}
+                        className="flex items-center gap-2.5 bg-[#fffbf2] border border-[#f0d898] rounded-xl px-3.5 py-2.5"
+                      >
+                        <ClockAlert size={16} className="text-[#c8860a] flex-shrink-0" />
+                        <div>
+                          <p className="text-[13px] font-medium text-[#6b4a08]">{t.nome}</p>
+                          <p className="text-[11px] text-[#c8860a] mt-0.5">{t.prazo}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* Últimas alocações */}
+          <section className="bg-white rounded-2xl border border-[#dde5d8] p-5">
+            <p className="text-[10px] font-medium tracking-widest text-[#7a9470] uppercase mb-4">
+              Últimas alocações
+            </p>
+
+            {isLoadingHistorico && (
+              <div className="text-[#6a8a60] text-sm">Carregando...</div>
+            )}
+
+            {!isLoadingHistorico && erroHistorico && (
+              <div className="text-red-500 text-sm">
+                Erro ao carregar últimas alocações.
+              </div>
+            )}
+
+            {!isLoadingHistorico && !erroHistorico && (
+              <div className="flex flex-col gap-2">
+                {ultimasAlocacoes.map((a) => (
+                  <div
+                    key={a.id ?? a.nome}
+                    className="flex items-center justify-between bg-[#f7faf4] border border-[#dde5d8] rounded-xl px-4 py-3"
+                  >
+                    <div>
+                      <p className="text-[13px] font-medium text-[#2d4a27]">{a.nome}</p>
+                      <p className="flex items-center gap-1 text-xs text-[#7a9470] mt-0.5">
+                        <MapPin size={12} />
+                        {a.local}
+                      </p>
+                    </div>
+                    <span className="text-xs text-[#7a9470] whitespace-nowrap ml-4">{a.periodo}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </main>
       </div>
     </div>
