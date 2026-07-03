@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import MoradiaHeader from "../components/MoradiaHeader";
-import CadastrarMoradia from "../components/CadastrarMoradia";
-import ListaMoradias from "../components/ListaMoradias";
-import ContasMoradia from "../components/ContasMoradia";
-import { useMoradia } from "../hooks/useMoradia";
+import MoradiaHeader from "./components/MoradiaHeader";
+import CadastrarMoradia from "./components/CadastrarMoradia";
+import ListaMoradias from "./components/ListaMoradias";
+import ContasMoradia from "./components/ContasMoradia";
+import { useMoradia } from "./hooks/useMoradia";
 
 export default function MoradiaPage() {
   const {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { moradiaService } from "../moradia/moradiaService";
+import { moradiaService } from "../moradiaService";
 
 const MORADIA_INICIAL = {
   endereco: "",

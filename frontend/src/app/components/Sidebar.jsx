@@ -19,7 +19,7 @@ const subMenus = {
     { href: "/ponto/justificativa", icon: FileText, label: "Justificativas" },
     { href: "/ponto/ferias-folgas", icon: Palmtree, label: "Férias e Folgas" },],
   "/dho": [
-    { href: "/dho", icon: Users, label: "Benefícios e Desempenho" },
+    { href: "/dho/beneficios-desempenho", icon: Users, label: "Benefícios e Desempenho" },
     { href: "/dho/meu-rh", icon: UserRound, label: "Meu RH" },
   ],
   "/ehs": [
@@ -41,7 +41,7 @@ const menuItems = [
   { href: "/ti", icon: Monitor, label: "T.I" },
   { href: "/logistica", icon: Truck, label: "Logística" },
   { href: "/ehs", icon: ShieldCheck, label: "EHS" },
-  { href: "/relatorios", icon: ClipboardList , label: "Relatórios" },
+  { href: "/relatorios", icon: ClipboardList, label: "Relatórios" },
   { href: "/suporte", icon: Headphones, label: "Suporte" },
 ];
 

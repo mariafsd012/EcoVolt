@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { tiService } from "../ti/tiService";
+import { tiService } from "../tiService";
 
 const EQUIPAMENTO_INICIAL = { tipo: "", colaborador: "", dataEntrega: "" };
 

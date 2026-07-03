@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import PontoHeader from "../../components/PontoHeader";
-import FiltrosJustificativa from "../../components/FiltrosJustificativa";
-import TabelaJustificativas from "../../components/TabelaJustificativas";
-import { useJustificativas } from "../../hooks/useJustificativas";
+import FiltrosJustificativa from "./components/FiltrosJustificativa";
+import TabelaJustificativas from "./components/TabelaJustificativas";
+import { useJustificativas } from "./hooks/useJustificativas";
 
 export default function JustificativaPage() {
   const router = useRouter();

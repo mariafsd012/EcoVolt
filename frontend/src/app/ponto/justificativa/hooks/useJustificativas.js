@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { pontoService } from "../ponto/justificativa/pontoService";
+import { pontoService } from "../pontoService";
 
 const FILTROS_INICIAIS = {
   colaborador: "",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { dhoService } from "../dho/dhoService";
+import { dhoService } from "../dhoService";
 
 const BENEFICIO_INICIAL = {
   nome: "",

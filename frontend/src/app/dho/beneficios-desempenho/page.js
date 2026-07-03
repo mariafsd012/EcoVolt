@@ -1,11 +1,11 @@
 "use client";
 
-import DHOHeader from "../components/DHOHeader";
-import CadastrarBeneficio from "../components/CadastrarBeneficio";
-import ListaBeneficios from "../components/ListaBeneficios";
-import CadastrarDesempenho from "../components/CadastrarDesempenho";
-import ListaDesempenhos from "../components/ListaDesempenhos";
-import { useDHO } from "../hooks/useDHO";
+import DHOHeader from "./components/DHOHeader";
+import CadastrarBeneficio from "./components/CadastrarBeneficio";
+import ListaBeneficios from "./components/ListaBeneficios";
+import CadastrarDesempenho from "./components/CadastrarDesempenho";
+import ListaDesempenhos from "./components/ListaDesempenhos";
+import { useDHO } from "./hooks/useDHO";
 
 export default function DHOBeneficiosPage() {
   const {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { treinamentosService } from "../ehs/treinamentos/treinamentosService";
+import { treinamentosService } from "../treinamentosService";
 
 const TREINAMENTO_INICIAL = {
   colaborador: "",

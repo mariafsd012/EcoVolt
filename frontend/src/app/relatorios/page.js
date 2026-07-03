@@ -1,10 +1,10 @@
 "use client";
 
 import RelatoriosHeader from "../components/RelatoriosHeader";
-import SeletorModulo from "../components/SeletorModulo";
-import FiltrosRelatorioModulo from "../components/FiltrosRelatorioModulo";
-import ResultadoRelatorioGeral from "../components/ResultadoRelatorioGeral";
-import { useRelatorios } from "../hooks/useRelatorios";
+import SeletorModulo from "./components/SeletorModulo";
+import FiltrosRelatorioModulo from "./components/FiltrosRelatorioModulo";
+import ResultadoRelatorioGeral from "./components/ResultadoRelatorioGeral";
+import { useRelatorios } from "./hooks/useRelatorios";
 
 export default function RelatoriosPage() {
   const {

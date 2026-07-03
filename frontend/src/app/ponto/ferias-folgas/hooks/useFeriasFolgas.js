@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { pontoService } from "../ponto/ferias-folgas/pontoService";
+import { pontoService } from "../pontoService";
 
 const FERIADO_INICIAL = {
   nome: "",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usuarioService } from "../ponto/controle/usuarioService";
+import { usuarioService } from "../../../ponto/controle/usuarioService";
 
 export default function EquipesHeader() {
   const [usuario, setUsuario] = useState(null);

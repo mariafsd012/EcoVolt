@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { suporteService } from "../suporte/suporteService";
+import { suporteService } from "../suporteService";
 
 const CHAMADO_INICIAL = { tipo: "", detalhamento: "" };
 

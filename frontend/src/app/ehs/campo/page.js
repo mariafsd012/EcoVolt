@@ -1,10 +1,10 @@
 "use client";
 
-import CampoHeader from "../../components/CampoHeader";
-import AlocacaoAtual from "../../components/AlocacaoAtual";
-import TreinamentosCampo from "../../components/TreinamentosCampo";
-import UltimasAlocacoes from "../../components/UltimasAlocacoes";
-import { useCampo } from "../../hooks/useCampo";
+import CampoHeader from "./components/CampoHeader";
+import AlocacaoAtual from "./components/AlocacaoAtual";
+import TreinamentosCampo from "./components/TreinamentosCampo";
+import UltimasAlocacoes from "./components/UltimasAlocacoes";
+import { useCampo } from "./hooks/useCampo";
 
 export default function CampoPage() {
   const {

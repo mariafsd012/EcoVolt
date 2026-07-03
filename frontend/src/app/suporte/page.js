@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import SuporteHeader from "../components/SuporteHeader";
-import AbrirChamado from "../components/AbrirChamado";
-import ChamadosRealizados from "../components/ChamadosRealizados";
-import { useSuporte } from "../hooks/useSuporte";
+import AbrirChamado from "./components/AbrirChamado";
+import ChamadosRealizados from "./components/ChamadosRealizados";
+import { useSuporte } from "./hooks/useSuporte";
 
 export default function SuportePage() {
   const router = useRouter();

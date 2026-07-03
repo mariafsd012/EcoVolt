@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { equipesService } from "../ehs/equipes/equipesService";
+import { equipesService } from "../equipesService";
 
 const EQUIPE_INICIAL = { nome: "", setor: "", colaboradoresIds: [] };
 

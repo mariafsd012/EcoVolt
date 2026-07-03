@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { relatoriosService } from "../relatorios/relatoriosService";
+import { relatoriosService } from "../relatoriosService";
 
 const FILTROS_INICIAIS_POR_MODULO = {
   ponto: { dataInicio: "", dataFim: "", colaborador: "", equipe: "", tipo: "todos" },

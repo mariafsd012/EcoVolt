@@ -1,9 +1,9 @@
 "use client";
 
-import MeuRHHeader from "../components/MeuRHHeader";
-import MeuDesempenho from "../components/MeuDesempenho";
-import MeusBeneficios from "../components/MeusBeneficios";
-import { useMeuRH } from "../hooks/useMeuRH";
+import MeuRHHeader from "./components/MeuRHHeader";
+import MeuDesempenho from "./components/MeuDesempenho";
+import MeusBeneficios from "./components/MeusBeneficios";
+import { useMeuRH } from "./hooks/useMeuRH";
 
 export default function MeuRHPage() {
   const {

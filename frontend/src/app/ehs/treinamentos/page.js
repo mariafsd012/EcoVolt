@@ -1,13 +1,12 @@
 "use client";
 
-
 import { useState } from "react";
-import TreinamentosHeader from "../../components/TreinamentosHeader";
-import CadastrarTreinamento from "../../components/CadastrarTreinamento";
-import FiltroTreinamentos from "../../components/FiltroTreinamentos";
-import TabelaTreinamentos from "../../components/TabelaTreinamentos";
-import ModalEditarTreinamento from "../../components/ModalEditarTreinamento";
-import { useTreinamentos } from "../../hooks/useTreinamentos";
+import TreinamentosHeader from "./components/TreinamentosHeader";
+import CadastrarTreinamento from "./components/CadastrarTreinamento";
+import FiltroTreinamentos from "./components/FiltroTreinamentos";
+import TabelaTreinamentos from "./components/TabelaTreinamentos";
+import ModalEditarTreinamento from "./components/ModalEditarTreinamento";
+import { useTreinamentos } from "./hooks/useTreinamentos";
 
 export default function TreinamentosPage() {
   const {

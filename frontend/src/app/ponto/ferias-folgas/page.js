@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import PontoHeader from "../../components/PontoHeader";
-import CadastrarFeriado from "../../components/CadastrarFeriado";
-import CadastrarAfastamento from "../../components/CadastrarAfastamento";
-import { useFeriasFolgas } from "../../hooks/useFeriasFolgas";
+import CadastrarFeriado from "./components/CadastrarFeriado";
+import CadastrarAfastamento from "./components/CadastrarAfastamento";
+import { useFeriasFolgas } from "./hooks/useFeriasFolgas";
 
 export default function FeriasFolgasPage() {
   const router = useRouter();

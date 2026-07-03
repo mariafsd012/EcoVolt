@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import EquipesHeader from "../../components/EquipesHeader";
-import CadastrarEquipe from "../../components/CadastrarEquipe";
-import ListaEquipes from "../../components/ListaEquipes";
-import ColaboradoresSemEquipe from "../../components/ColaboradoresSemEquipe";
-import ModalEditarEquipe from "../../components/ModalEditarEquipe";
-import { useEquipes } from "../../hooks/useEquipes";
+import EquipesHeader from "./components/EquipesHeader";
+import CadastrarEquipe from "./components/CadastrarEquipe";
+import ListaEquipes from "./components/ListaEquipes";
+import ColaboradoresSemEquipe from "./components/ColaboradoresSemEquipe";
+import ModalEditarEquipe from "./components/ModalEditarEquipe";
+import { useEquipes } from "./hooks/useEquipes";
 
 export default function EquipesPage() {
   const {
