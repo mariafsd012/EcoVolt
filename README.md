@@ -1,4 +1,4 @@
-# 🌱 EcoVolt
+# 𖣘 EcoVolt
 
 O **EcoVolt** é um sistema corporativo desenvolvido para uma **empresa fictícia do setor de energia eólica**, com o objetivo de centralizar e otimizar os processos internos da organização.
 
